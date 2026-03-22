@@ -8,9 +8,11 @@
     <title>MidoStudy - Odaklanma Alanı</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* --- TASARIM SİSTEMİ & RENK PALETİ --- */
         :root {
             --bg-main: #FFFFFF;
             --bg-card: #F5F5F7;
+            --bg-card-sec: #FAFAFA;
             --accent: #1D1D1F;
             --accent-hover: #3a3a3c;
             --link-cta: #0071E3;
@@ -135,8 +137,62 @@
         .toast { position: fixed; top: 20px; right: 20px; background: var(--accent); color: white; padding: 12px 24px; border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-weight: 500; z-index: 9999; opacity: 0; transform: translateY(-20px); transition: var(--transition); }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        @media (max-width: 1024px) { .grid-container { grid-template-columns: 1fr 1fr; } .col-center { grid-column: span 2; } }
-        @media (max-width: 768px) { .grid-container { grid-template-columns: 1fr; } .col-center { grid-column: span 1; } header { flex-direction: column; gap: 15px; } }
+        /* --- MOBİL OPTİMİZASYONU (Sıfır Beyaz Boşluk, Kusursuz Düzen) --- */
+        @media (max-width: 1024px) { 
+            .grid-container { grid-template-columns: 1fr 1fr; } 
+            .col-center { grid-column: span 2; } 
+        }
+        
+        @media (max-width: 768px) { 
+            /* Header Mobil Düzeni */
+            header { 
+                display: grid; 
+                grid-template-columns: 1fr auto; 
+                row-gap: 16px; 
+                padding: 16px 20px; 
+            }
+            .logo { grid-column: 1 / 2; grid-row: 1; font-size: 1.6rem; align-self: center; }
+            .header-right { grid-column: 2 / 3; grid-row: 1; gap: 8px; }
+            .btn-kunduz { padding: 8px 12px; font-size: 0.85rem; }
+            .btn-settings { width: 36px; height: 36px; }
+            .header-center { 
+                grid-column: 1 / 3; 
+                grid-row: 2; 
+                justify-content: center; 
+                background: var(--bg-card); 
+                padding: 8px; 
+                border-radius: var(--radius-sm); 
+                width: 100%;
+            }
+            .date-picker-wrap { width: 100%; justify-content: center; }
+            .live-clock-sm { display: none; } /* Mobilde üst barı temiz tutmak için saati gizledik */
+
+            /* Dashboard Mobil Düzeni */
+            #dashboard { padding: 16px 20px; }
+            .grid-container { 
+                display: flex; 
+                flex-direction: column; 
+                gap: 16px; 
+                margin-top: 16px !important; 
+            }
+            /* En kritik hamle: İlerleme kartını mobilde EN ÜSTE çektik */
+            .col-center { order: -1; }
+            
+            /* Kart Optimizasyonları */
+            .card { padding: 20px; margin-bottom: 0; }
+            .card-center-main { padding: 24px 20px; }
+            .progress-circle-wrap { width: 140px; height: 140px; margin: 10px auto; }
+            .progress-time { font-size: 1.3rem; }
+            .btn-start-large { padding: 14px; font-size: 1rem; }
+
+            /* Study Mode Mobil Düzeni */
+            #study-mode { padding: 20px; }
+            .flip-clock { margin-bottom: 40px; gap: 10px; }
+            .flip-card { width: 80px; height: 110px; font-size: 3.5rem; }
+            .flip-colon { font-size: 3rem; }
+            .timer-content { padding: 30px 20px; }
+            .digital-display { font-size: 3rem; margin: 15px 0 25px; }
+        }
     </style>
 </head>
 <body>
@@ -162,7 +218,7 @@
             </div>
         </header>
 
-        <div class="grid-container" style="margin-top: 32px;">
+        <div class="grid-container">
             <div class="col-left">
                 <div class="card haftalik">
                     <div class="card-title">Haftalık Analiz</div>
@@ -550,7 +606,7 @@
         window.resetTimer = function() { 
             if(intervalRef) { clearInterval(intervalRef); intervalRef = null; }
             let elapsed = timerStartMs - (timeRemaining * 1000);
-            if(elapsed >= 60000) { window.addSessionRecord('Sayaç', elapsed); } // Otomatik Kayıt
+            if(elapsed >= 60000) { window.addSessionRecord('Sayaç', elapsed); } 
             timeRemaining = 0; timerStartMs = 0; document.getElementById('timer-display').innerText = "00:00"; document.getElementById('btn-timer-start').innerText = "Başlat";
         }
 
@@ -565,7 +621,7 @@
         window.pauseStopwatch = function() { clearInterval(intervalRef); intervalRef = null; document.getElementById('btn-sw-start').innerText = "Devam"; }
         window.resetStopwatch = function() { 
             if(intervalRef) { clearInterval(intervalRef); intervalRef = null; }
-            if(swTime >= 60000) { window.addSessionRecord('Kronometre', swTime); } // Otomatik Kayıt
+            if(swTime >= 60000) { window.addSessionRecord('Kronometre', swTime); } 
             swTime = 0; document.getElementById('sw-display').innerText = "00:00:00"; document.getElementById('btn-sw-start').innerText = "Başlat"; 
         }
 
@@ -597,7 +653,7 @@
         window.resetPomodoro = function() { 
             if(intervalRef) { clearInterval(intervalRef); intervalRef = null; }
             let elapsed = pomoTotalMs - (timeRemaining * 1000);
-            if(pomoMode === 'work' && elapsed >= 60000) { window.addSessionRecord('Pomodoro', elapsed); } // Otomatik Kayıt
+            if(pomoMode === 'work' && elapsed >= 60000) { window.addSessionRecord('Pomodoro', elapsed); } 
             timeRemaining = 0; pomoTotalMs = 0; pomoMode='work'; document.getElementById('pomo-display').innerText = "25:00"; document.getElementById('pomo-status').innerText = "Çalışma Odaklanması"; document.getElementById('btn-pomo-start').innerText = "Başlat"; 
         }
 
