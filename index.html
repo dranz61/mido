@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1D1D1F">
+    <link rel="manifest" href="./manifest.json">
+    <title>MidoStudy - Odaklanma Alanı</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #FFFFFF;
+            --bg-card: #F5F5F7;
+            --accent: #1D1D1F;
+            --accent-hover: #3a3a3c;
+            --link-cta: #0071E3;
+            --navy-blue: #153259;
+            --text-main: #1D1D1F;
+            --text-sec: #6E6E73;
+            --border: #D2D2D7;
+            --success: #34C759;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            
+            --font-head: 'DM Serif Display', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            
+            --radius-card: 16px;
+            --radius-btn: 12px;
+            --radius-sm: 8px;
+            --shadow-card: 0 2px 12px rgba(0,0,0,0.07);
+            --shadow-lg: 0 4px 24px rgba(0,0,0,0.10);
+            --transition: all 0.3s ease-out;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 24px; box-shadow: var(--shadow-card); border: 1px solid var(--border); margin-bottom: 24px; transition: var(--transition); }
+        .card-title { font-family: var(--font-head); font-size: 1.25rem; color: var(--text-main); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+
+        button { cursor: pointer; border: none; outline: none; font-family: var(--font-body); transition: var(--transition); }
+        .btn-black { background: var(--accent); color: #FFFFFF; padding: 12px 24px; border-radius: var(--radius-btn); font-weight: 500; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-black:hover { background: var(--accent-hover); transform: translateY(-2px); }
+        .btn-icon { background: transparent; color: var(--text-sec); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .btn-icon:hover { color: var(--accent); background: rgba(0,0,0,0.05); }
+
+        input, select, textarea { background: #FFFFFF; border: 1px solid var(--border); color: var(--text-main); padding: 10px 14px; border-radius: var(--radius-sm); font-family: var(--font-body); width: 100%; transition: var(--transition); }
+        input:focus { border-color: var(--accent); outline: none; }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-bottom: 1px solid var(--border); background: var(--bg-main); position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: var(--font-head); font-size: 2rem; color: var(--text-main); }
+        .header-center { display: flex; align-items: center; gap: 16px; color: var(--text-sec); font-weight: 500; }
+        
+        .date-picker-wrap { position: relative; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: var(--radius-sm); transition: var(--transition); }
+        .date-picker-wrap:hover { background: var(--bg-card); }
+        .date-picker-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .live-clock-sm { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent); font-weight: 700; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+        
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .btn-kunduz { text-decoration: none; padding: 8px 16px; font-size: 0.9rem; }
+        .btn-settings { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+        .btn-settings:hover { background: #E5E5EA; }
+
+        #dashboard { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 24px; align-items: start; }
+
+        .card-center-main { background: #FFFFFF; box-shadow: var(--shadow-lg); padding: 32px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+        .progress-circle-wrap { position: relative; width: 180px; height: 180px; margin: 20px auto; }
+        .progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+        .progress-svg circle { fill: none; stroke-width: 14; stroke-linecap: round; }
+        .prog-bg { stroke: var(--bg-card); }
+        .prog-bar { stroke: var(--navy-blue); stroke-dasharray: 540; stroke-dashoffset: 540; transition: stroke-dashoffset 1s ease-out, stroke 0.5s; }
+        
+        .progress-text-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; }
+        .progress-time { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
+        .progress-target { font-size: 0.85rem; color: var(--text-sec); margin-top: 4px; }
+        .progress-status { font-weight: 500; color: var(--navy-blue); margin-bottom: 30px; }
+        .btn-start-large { width: 100%; font-size: 1.1rem; padding: 16px; margin-top: auto; }
+
+        .chart-wrap { height: 160px; width: 100%; margin-top: 10px; }
+        svg.weekly-chart { width: 100%; height: 100%; overflow: visible; }
+        .bar { fill: var(--border); transition: var(--transition); rx: 4; }
+        .bar-today { fill: var(--accent); }
+        .bar-text { fill: var(--text-sec); font-size: 11px; font-family: var(--font-body); text-anchor: middle; }
+        .target-line { stroke: var(--link-cta); stroke-dasharray: 4,4; stroke-width: 1.5; }
+        .chart-stats { display: flex; justify-content: space-between; margin-top: 16px; font-size: 0.85rem; color: var(--text-sec); font-weight: 500; }
+
+        .list-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; }
+        .list-row.completed span.item-text { text-decoration: line-through; opacity: 0.45; }
+        .item-text { flex-grow: 1; font-weight: 500; font-size: 0.95rem; }
+        .btn-delete { background: transparent; color: var(--text-sec); font-size: 1.2rem; cursor: pointer; border: none; padding: 0 4px; }
+        .btn-delete:hover { color: var(--danger); }
+
+        .agenda-list { max-height: 250px; overflow-y: auto; padding-right: 5px; }
+        .agenda-item { padding: 12px; border-left: 3px solid var(--accent); background: #FFFFFF; margin-bottom: 8px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; border: 1px solid var(--border); border-left-width: 3px; }
+        .agenda-time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-sec); margin-bottom: 4px; }
+        
+        .stat-box { background: #FFFFFF; border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-sm); text-align: center; margin-bottom: 12px; }
+        .stat-val { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 700; color: var(--accent); }
+        .quote-box { font-style: italic; color: var(--text-sec); border-left: 2px solid var(--border); padding-left: 12px; margin-bottom: 20px; font-size: 0.95rem; }
+
+        /* STUDY MODE */
+        #study-mode { background: var(--bg-card); min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        .study-header { width: 100%; max-width: 800px; display: flex; justify-content: flex-start; margin-bottom: 60px; }
+        
+        .flip-clock { display: flex; align-items: center; gap: 15px; margin-bottom: 60px; }
+        .flip-card { background: var(--accent); color: #FFFFFF; font-family: var(--font-mono); font-size: 5rem; font-weight: 700; width: 110px; height: 140px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-btn); box-shadow: 0 8px 32px rgba(0,0,0,0.18); position: relative; }
+        .flip-card::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.12); }
+        .flip-colon { font-family: var(--font-mono); font-size: 4rem; color: var(--accent); font-weight: 700; margin: 0 -5px; padding-bottom: 10px; }
+
+        .timer-wrapper { max-width: 500px; width: 100%; }
+        .tabs { display: flex; background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-btn); overflow: hidden; margin-bottom: 24px; }
+        .tab-btn { flex: 1; padding: 14px; background: transparent; color: var(--text-sec); font-weight: 500; }
+        .tab-btn.active { background: var(--accent); color: #FFFFFF; }
+        
+        .timer-content { background: #FFFFFF; padding: 40px; border-radius: var(--radius-card); border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow-card); }
+        .digital-display { font-family: var(--font-mono); font-size: 3.5rem; font-weight: 700; color: var(--accent); margin: 20px 0 30px; letter-spacing: -2px; }
+        .controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+        /* MODALS & NOTIFICATIONS */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: var(--transition); }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--bg-main); padding: 32px; border-radius: var(--radius-card); width: 400px; max-width: 90%; box-shadow: 0 24px 48px rgba(0,0,0,0.15); border: 1px solid var(--border); transform: scale(0.96); transition: var(--transition); }
+        .modal.active .modal-content { transform: scale(1); }
+        .toast { position: fixed; top: 20px; right: 20px; background: var(--accent); color: white; padding: 12px 24px; border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-weight: 500; z-index: 9999; opacity: 0; transform: translateY(-20px); transition: var(--transition); }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1024px) { .grid-container { grid-template-columns: 1fr 1fr; } .col-center { grid-column: span 2; } }
+        @media (max-width: 768px) { .grid-container { grid-template-columns: 1fr; } .col-center { grid-column: span 1; } header { flex-direction: column; gap: 15px; } }
+    </style>
+</head>
+<body>
+
+    <div id="dashboard" class="fade-in">
+        <header>
+            <div class="logo">MidoStudy</div>
+            <div class="header-center">
+                <label class="date-picker-wrap">
+                    <span id="date-display" style="font-weight: 600; color: var(--text-main);">Tarih Yükleniyor...</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <input type="date" id="history-date-picker" class="date-picker-input" onchange="window.changeViewDate(this.value)">
+                </label>
+                <div class="live-clock-sm" id="header-clock">00:00:00</div>
+            </div>
+            <div class="header-right">
+                <a href="https://kunduz.com/u/student/counseling/" target="_blank" class="btn-black btn-kunduz">🦫 Kunduz</a>
+                <button class="btn-settings" onclick="window.openSettings()" title="Ayarlar">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid-container" style="margin-top: 32px;">
+            <div class="col-left">
+                <div class="card haftalik">
+                    <div class="card-title">Haftalık Analiz</div>
+                    <div class="chart-wrap" id="chart-container"></div>
+                    <div class="chart-stats">
+                        <span id="stat-week-total">Toplam: 0s</span>
+                        <span id="stat-week-avg">Ort: 0s</span>
+                    </div>
+                </div>
+
+                <div class="card todo">
+                    <div class="card-title">Görevler <button class="btn-icon" onclick="window.addTodo()">+</button></div>
+                    <div style="display:flex; gap:8px; margin-bottom:16px;">
+                        <input type="text" id="todo-input" placeholder="Yeni görev...">
+                    </div>
+                    <div id="todo-list"></div>
+                </div>
+            </div>
+
+            <div class="col-center">
+                <div class="card card-center-main">
+                    <div class="card-title" style="width: 100%; justify-content: center;" id="progress-card-title">Bugünkü İlerleme</div>
+                    <div class="progress-circle-wrap">
+                        <svg class="progress-svg" viewBox="0 0 200 200">
+                            <circle class="prog-bg" cx="100" cy="100" r="86"></circle>
+                            <circle class="prog-bar" id="prog-bar" cx="100" cy="100" r="86"></circle>
+                        </svg>
+                        <div class="progress-text-inner">
+                            <div class="progress-time" id="prog-time">0s 0dk</div>
+                            <div class="progress-target" id="prog-target">/ 6 saat</div>
+                        </div>
+                    </div>
+                    <div class="progress-status" id="prog-status">%0 tamamlandı</div>
+                    <button class="btn-black btn-start-large" onclick="window.toggleMode('study')">Çalışmaya Başla →</button>
+                </div>
+
+                <div class="card agenda">
+                    <div class="card-title">Zaman Çizelgesi <button class="btn-icon" onclick="window.openAgendaModal()">+</button></div>
+                    <div class="agenda-list" id="agenda-list"></div>
+                </div>
+            </div>
+
+            <div class="col-right">
+                <div class="card hedefler">
+                    <div class="card-title">Hedeflerim <button class="btn-icon" onclick="window.addGoal()">+</button></div>
+                    <div id="goals-list"></div>
+                </div>
+
+                <div class="card istatistikler">
+                    <div class="card-title">İstatistikler</div>
+                    <div class="quote-box" id="daily-quote">"Başarı, her gün tekrarlanan küçük çabaların toplamıdır."</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div class="stat-box">
+                            <div style="font-size:0.8rem; color:var(--text-sec); margin-bottom:4px;">Seri (Streak)</div>
+                            <div class="stat-val" id="stat-streak">0</div>
+                        </div>
+                        <div class="stat-box">
+                            <div style="font-size:0.8rem; color:var(--text-sec); margin-bottom:4px;">Tüm Zamanlar</div>
+                            <div class="stat-val" style="font-size: 1.1rem; padding-top:4px;" id="stat-total-time">0s 0dk</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="study-mode" class="hidden">
+        <div class="study-header fade-in">
+            <button class="btn-black" style="padding: 10px 20px;" onclick="window.attemptExitStudy()">← Geri Dön</button>
+        </div>
+
+        <div class="flip-clock fade-in">
+            <div class="flip-card" id="flip-h">00</div>
+            <div class="flip-colon">:</div>
+            <div class="flip-card" id="flip-m">00</div>
+        </div>
+
+        <div class="timer-wrapper fade-in">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="window.switchTab('timer')">SAYAÇ</button>
+                <button class="tab-btn" onclick="window.switchTab('stopwatch')">KRONOMETRE</button>
+                <button class="tab-btn" onclick="window.switchTab('pomodoro')">POMODORO</button>
+            </div>
+
+            <div id="tab-timer" class="timer-content">
+                <input type="number" id="timer-input-m" placeholder="Dk" style="width:100px; text-align:center; font-family:var(--font-mono); font-size:1.1rem;">
+                <div class="digital-display" id="timer-display">00:00</div>
+                <div class="controls">
+                    <button class="btn-black" id="btn-timer-start" onclick="window.startTimer()">Başlat</button>
+                    <button class="btn-black" onclick="window.pauseTimer()">Duraklat</button>
+                    <button class="btn-black" onclick="window.resetTimer()">Bitir & Sıfırla</button>
+                </div>
+            </div>
+
+            <div id="tab-stopwatch" class="timer-content hidden">
+                <div class="digital-display" id="sw-display">00:00:00</div>
+                <div class="controls">
+                    <button class="btn-black" id="btn-sw-start" onclick="window.startStopwatch()">Başlat</button>
+                    <button class="btn-black" onclick="window.pauseStopwatch()">Duraklat</button>
+                    <button class="btn-black" onclick="window.resetStopwatch()">Bitir & Sıfırla</button>
+                </div>
+            </div>
+
+            <div id="tab-pomodoro" class="timer-content hidden">
+                <div style="color:var(--text-sec); font-weight:500; font-size:1.1rem; margin-bottom:-10px;" id="pomo-status">Çalışma Odaklanması</div>
+                <div class="digital-display" id="pomo-display">25:00</div>
+                <div class="controls">
+                    <button class="btn-black" id="btn-pomo-start" onclick="window.startPomodoro()">Başlat</button>
+                    <button class="btn-black" onclick="window.pausePomodoro()">Duraklat</button>
+                    <button class="btn-black" onclick="window.resetPomodoro()">Bitir & Sıfırla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="agenda-modal" class="modal">
+        <div class="modal-content" style="width: 340px;">
+            <div class="card-title">Etkinlik Ekle <button class="btn-icon" onclick="window.closeAgendaModal()">✕</button></div>
+            <div style="margin-bottom: 16px;">
+                <label style="font-size:0.85rem; color:var(--text-sec); font-weight:500;">Saat:</label>
+                <input type="time" id="agenda-time" style="margin-top:4px;">
+            </div>
+            <div style="margin-bottom: 24px;">
+                <label style="font-size:0.85rem; color:var(--text-sec); font-weight:500;">Açıklama:</label>
+                <input type="text" id="agenda-title" placeholder="Örn: Matematik Çalışması" style="margin-top:4px;">
+            </div>
+            <button class="btn-black" style="width:100%" onclick="window.saveAgenda()">Ekle</button>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="card-title">Ayarlar <button class="btn-icon" onclick="window.closeSettings()">✕</button></div>
+            <div style="margin-bottom: 20px;">
+                <label style="font-size:0.9rem; font-weight:500; color:var(--text-sec);">Günlük Hedef (Saat):</label>
+                <input type="number" id="set-target" style="margin-top:8px;">
+            </div>
+            <button class="btn-black" style="width: 100%; margin-bottom: 12px;" onclick="window.saveSettings()">Değişiklikleri Kaydet</button>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast">Süre eklendi!</div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAXUUW1XrkTHtEkNLPzd7F4P0jBiP5KnzU",
+            authDomain: "midostudy-1960d.firebaseapp.com",
+            databaseURL: "https://midostudy-1960d-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "midostudy-1960d",
+            storageBucket: "midostudy-1960d.firebasestorage.app",
+            messagingSenderId: "299113418248",
+            appId: "1:299113418248:web:42afdb2919766d1c7d8bbd",
+            measurementId: "G-9G4ZVJMQXR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        // Kişiselleştirilmiş DB Node (mirza için)
+        const dbRef = ref(db, 'users/mirza_data');
+
+        // --- GLOBAL STATE ---
+        const realTodayStr = new Date().toISOString().split('T')[0];
+        window.currentViewDate = realTodayStr; 
+        
+        window.appData = {
+            targetHours: 6, goals: [], todos: {}, agenda: {}, sessions: {},
+            stats: { streak: 0, lastStudyDate: null, totalPomo: 0 }
+        };
+
+        function initDateData(dateStr) {
+            if(!window.appData.todos[dateStr]) window.appData.todos[dateStr] = [];
+            if(!window.appData.agenda[dateStr]) window.appData.agenda[dateStr] = [];
+            if(!window.appData.sessions[dateStr]) window.appData.sessions[dateStr] = [];
+        }
+
+        // Firebase'den İlk Çekim
+        get(dbRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                window.appData = snapshot.val();
+            }
+            initDateData(realTodayStr);
+            document.getElementById('history-date-picker').value = realTodayStr;
+            window.updateDashboard();
+        }).catch((error) => {
+            console.error("Firebase veri çekme hatası:", error);
+            initDateData(realTodayStr);
+            window.updateDashboard();
+        });
+
+        // Firebase'e Senkronize Kayıt
+        window.saveData = function() {
+            set(dbRef, window.appData).then(() => {
+                window.updateDashboard();
+            }).catch((error) => console.error("Firebase yazma hatası:", error));
+        }
+
+        window.changeViewDate = function(newDate) {
+            if(!newDate) return;
+            window.currentViewDate = newDate;
+            initDateData(window.currentViewDate);
+            window.updateDashboard();
+        }
+
+        // --- UTILS ---
+        window.formatTimeSpan = function(ms) {
+            let totalMin = Math.floor(ms / 60000);
+            let h = Math.floor(totalMin / 60);
+            let m = totalMin % 60;
+            return `${h}s ${m}dk`;
+        }
+        function pad(n) { return n < 10 ? '0'+n : n; }
+        
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        window.playBeep = function() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.connect(ctx.destination);
+                osc.start(); osc.stop(ctx.currentTime + 0.3);
+            } catch(e) {}
+        }
+
+        // --- DASHBOARD RENDER ---
+        window.updateDashboard = function() {
+            const dateObj = new Date(window.currentViewDate);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let dateText = dateObj.toLocaleDateString('tr-TR', options);
+            if(window.currentViewDate === realTodayStr) dateText = "Bugün, " + dateText;
+            document.getElementById('date-display').innerText = dateText;
+            document.getElementById('progress-card-title').innerText = window.currentViewDate === realTodayStr ? "Bugünkü İlerleme" : "İlerleme";
+
+            const viewMs = window.appData.sessions[window.currentViewDate].reduce((acc, curr) => acc + curr.durationMs, 0);
+            const targetMs = window.appData.targetHours * 3600000;
+            const percent = Math.min(100, (viewMs / targetMs) * 100);
+            
+            document.getElementById('prog-time').innerText = window.formatTimeSpan(viewMs);
+            document.getElementById('prog-target').innerText = `/ ${window.appData.targetHours} saat`;
+            
+            const circle = document.getElementById('prog-bar');
+            const offset = 540 - (540 * percent) / 100;
+            circle.style.strokeDashoffset = offset;
+            
+            let statusText = `%${Math.floor(percent)} tamamlandı`;
+            if(percent >= 100) statusText = "Hedef aşıldı! 🎉";
+            document.getElementById('prog-status').innerText = statusText;
+
+            document.getElementById('stat-streak').innerText = `${window.appData.stats.streak}`;
+            
+            let totalAllTimeMs = 0;
+            for (let dateKey in window.appData.sessions) {
+                window.appData.sessions[dateKey].forEach(session => { totalAllTimeMs += session.durationMs; });
+            }
+            document.getElementById('stat-total-time').innerText = window.formatTimeSpan(totalAllTimeMs);
+
+            window.renderTodos(); window.renderGoals(); window.renderAgenda(); window.renderChart();
+        }
+
+        // --- CHART (SVG) ---
+        window.renderChart = function() {
+            const container = document.getElementById('chart-container');
+            let svgHTML = `<svg class="weekly-chart" viewBox="0 0 300 120">`;
+            let maxMs = window.appData.targetHours * 3600000;
+            let daysData = [], totalWeekMs = 0;
+
+            for(let i=6; i>=0; i--) {
+                let d = new Date(window.currentViewDate); d.setDate(d.getDate() - i);
+                let dStr = d.toISOString().split('T')[0];
+                let ms = (window.appData.sessions[dStr] || []).reduce((a,b)=>a+b.durationMs, 0);
+                daysData.push({ label: d.toLocaleDateString('tr-TR',{weekday:'short'}).substring(0,3), ms: ms, isToday: i===0 });
+                if(ms > maxMs) maxMs = ms; totalWeekMs += ms;
+            }
+
+            const barW = 24, spacing = (300 - (7*barW)) / 6;
+            const targetY = 100 - ((window.appData.targetHours * 3600000) / maxMs) * 90;
+            if(targetY > 10) svgHTML += `<line x1="0" y1="${targetY}" x2="300" y2="${targetY}" class="target-line"/>`;
+
+            daysData.forEach((day, i) => {
+                let x = i * (barW + spacing), h = Math.max((day.ms / maxMs) * 90, 2), y = 100 - h;
+                let cls = day.isToday ? 'bar bar-today' : 'bar';
+                if(day.ms === 0) h = 0; 
+                svgHTML += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" class="${cls}"></rect>`;
+                svgHTML += `<text x="${x + 12}" y="115" class="bar-text">${day.label}</text>`;
+            });
+            svgHTML += `</svg>`;
+            container.innerHTML = svgHTML;
+            document.getElementById('stat-week-total').innerText = `Top: ${window.formatTimeSpan(totalWeekMs)}`;
+            document.getElementById('stat-week-avg').innerText = `Ort: ${window.formatTimeSpan(totalWeekMs/7)}`;
+        }
+
+        // --- LISTS ---
+        window.addGoal = function() { const t = prompt("Hedef:"); if(t) { window.appData.goals.push({ id: Date.now(), text: t, done: false }); window.saveData(); } }
+        window.toggleGoal = function(id) { let g = window.appData.goals.find(x => x.id === id); if(g) { g.done = !g.done; window.saveData(); } }
+        window.deleteGoal = function(id) { window.appData.goals = window.appData.goals.filter(x => x.id !== id); window.saveData(); }
+        window.renderGoals = function() {
+            const list = document.getElementById('goals-list'); let html = '';
+            window.appData.goals.forEach(g => { html += `<div class="list-row ${g.done ? 'completed' : ''}"><input type="checkbox" ${g.done?'checked':''} onchange="window.toggleGoal(${g.id})"><span class="item-text">${g.text}</span><button class="btn-delete" onclick="window.deleteGoal(${g.id})">×</button></div>`; });
+            list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Hedef yok.</div>';
+        }
+
+        window.addTodo = function() { const i = document.getElementById('todo-input'); if(i.value.trim()) { window.appData.todos[window.currentViewDate].push({ id: Date.now(), text: i.value, done: false }); i.value = ''; window.saveData(); } }
+        window.toggleTodo = function(id) { let t = window.appData.todos[window.currentViewDate].find(x => x.id === id); if(t) { t.done = !t.done; window.saveData(); } }
+        window.deleteTodo = function(id) { window.appData.todos[window.currentViewDate] = window.appData.todos[window.currentViewDate].filter(x => x.id !== id); window.saveData(); }
+        window.renderTodos = function() {
+            const list = document.getElementById('todo-list'); let html = '';
+            window.appData.todos[window.currentViewDate].forEach(t => { html += `<div class="list-row ${t.done ? 'completed' : ''}"><input type="checkbox" ${t.done?'checked':''} onchange="window.toggleTodo(${t.id})"><span class="item-text">${t.text}</span><button class="btn-delete" onclick="window.deleteTodo(${t.id})">×</button></div>`; });
+            list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Görev yok.</div>';
+        }
+
+        // --- AGENDA ---
+        window.openAgendaModal = function() { document.getElementById('agenda-time').value = ''; document.getElementById('agenda-title').value = ''; document.getElementById('agenda-modal').classList.add('active'); }
+        window.closeAgendaModal = function() { document.getElementById('agenda-modal').classList.remove('active'); }
+        window.saveAgenda = function() {
+            const t = document.getElementById('agenda-time').value, title = document.getElementById('agenda-title').value.trim();
+            if(t && title) { window.appData.agenda[window.currentViewDate].push({ id: Date.now(), time: t, title: title }); window.appData.agenda[window.currentViewDate].sort((a,b) => a.time.localeCompare(b.time)); window.saveData(); window.closeAgendaModal(); }
+        }
+        window.deleteAgenda = function(id) { window.appData.agenda[window.currentViewDate] = window.appData.agenda[window.currentViewDate].filter(x => x.id !== id); window.saveData(); }
+        window.renderAgenda = function() {
+            const list = document.getElementById('agenda-list'); let html = '';
+            window.appData.agenda[window.currentViewDate].forEach(a => { html += `<div class="agenda-item" style="display:flex; justify-content:space-between;"><div><div class="agenda-time">${a.time}</div><div style="font-weight:500;">${a.title}</div></div><button class="btn-delete" onclick="window.deleteAgenda(${a.id})">×</button></div>`; });
+            list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Plan yok.</div>';
+        }
+
+        // --- STUDY MODE MANTIĞI & OTOMATİK KAYITLAR ---
+        let intervalRef = null, timeRemaining = 0, swTime = 0, swStart = 0;
+        let timerStartMs = 0, pomoTotalMs = 0;
+
+        window.toggleMode = function(mode) {
+            document.getElementById('dashboard').classList.toggle('hidden', mode === 'study');
+            document.getElementById('study-mode').classList.toggle('hidden', mode === 'dashboard');
+            window.scrollTo(0,0);
+        }
+        window.attemptExitStudy = function() {
+            if(intervalRef && !confirm("Zamanlayıcı çalışıyor. Çıkmak istediğinize emin misiniz?")) return;
+            if(intervalRef) { clearInterval(intervalRef); intervalRef = null; }
+            window.toggleMode('dashboard');
+        }
+        window.switchTab = function(tab) {
+            document.querySelectorAll('.timer-content').forEach(e => e.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        window.addSessionRecord = function(type, durationMs) {
+            if(durationMs < 60000) return; // 1 dakikadan azsa kaydetme
+            initDateData(realTodayStr);
+            window.appData.sessions[realTodayStr].push({ id: Date.now(), type: type, durationMs: durationMs, time: new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) });
+            if(window.appData.stats.lastStudyDate !== realTodayStr) { window.appData.stats.streak++; window.appData.stats.lastStudyDate = realTodayStr; }
+            if(type === 'Pomodoro') window.appData.stats.totalPomo++;
+            
+            if(window.currentViewDate !== realTodayStr) {
+                window.currentViewDate = realTodayStr;
+                document.getElementById('history-date-picker').value = realTodayStr;
+            }
+            window.saveData();
+            window.showToast(`${window.formatTimeSpan(durationMs)} senkronize edildi.`);
+        }
+
+        // TIMER (Sayaç)
+        window.startTimer = function() {
+            if(intervalRef) return;
+            if(timeRemaining === 0) {
+                timeRemaining = (parseInt(document.getElementById('timer-input-m').value) || 0) * 60;
+                timerStartMs = timeRemaining * 1000;
+            }
+            if(timeRemaining <= 0) return;
+            document.getElementById('btn-timer-start').innerText = "Çalışıyor";
+            intervalRef = setInterval(() => {
+                timeRemaining--; document.getElementById('timer-display').innerText = `${pad(Math.floor(timeRemaining/60))}:${pad(timeRemaining%60)}`;
+                if(timeRemaining <= 0) { clearInterval(intervalRef); intervalRef = null; window.playBeep(); window.addSessionRecord('Sayaç', timerStartMs); document.getElementById('btn-timer-start').innerText = "Başlat"; }
+            }, 1000);
+        }
+        window.pauseTimer = function() { clearInterval(intervalRef); intervalRef = null; document.getElementById('btn-timer-start').innerText = "Devam"; }
+        window.resetTimer = function() { 
+            if(intervalRef) { clearInterval(intervalRef); intervalRef = null; }
+            let elapsed = timerStartMs - (timeRemaining * 1000);
+            if(elapsed >= 60000) { window.addSessionRecord('Sayaç', elapsed); } // Otomatik Kayıt
+            timeRemaining = 0; timerStartMs = 0; document.getElementById('timer-display').innerText = "00:00"; document.getElementById('btn-timer-start').innerText = "Başlat";
+        }
+
+        // STOPWATCH (Kronometre)
+        window.startStopwatch = function() {
+            if(intervalRef) return; swStart = Date.now() - swTime; document.getElementById('btn-sw-start').innerText = "Çalışıyor";
+            intervalRef = setInterval(() => {
+                swTime = Date.now() - swStart;
+                document.getElementById('sw-display').innerText = `${pad(Math.floor(swTime/3600000))}:${pad(Math.floor((swTime%3600000)/60000))}:${pad(Math.floor((swTime%60000)/1000))}`;
+            }, 100);
+        }
+        window.pauseStopwatch = function() { clearInterval(intervalRef); intervalRef = null; document.getElementById('btn-sw-start').innerText = "Devam"; }
+        window.resetStopwatch = function() { 
+            if(intervalRef) { clearInterval(intervalRef); intervalRef = null; }
+            if(swTime >= 60000) { window.addSessionRecord('Kronometre', swTime); } // Otomatik Kayıt
+            swTime = 0; document.getElementById('sw-display').innerText = "00:00:00"; document.getElementById('btn-sw-start').innerText = "Başlat"; 
+        }
+
+        // POMODORO
+        let pomoMode = 'work';
+        window.startPomodoro = function() {
+            if(intervalRef) return;
+            if(timeRemaining === 0) {
+                timeRemaining = pomoMode === 'work' ? 25*60 : 5*60;
+                pomoTotalMs = timeRemaining * 1000;
+            }
+            document.getElementById('btn-pomo-start').innerText = "Çalışıyor";
+            intervalRef = setInterval(() => {
+                timeRemaining--; document.getElementById('pomo-display').innerText = `${pad(Math.floor(timeRemaining/60))}:${pad(timeRemaining%60)}`;
+                if(timeRemaining <= 0) {
+                    clearInterval(intervalRef); intervalRef = null; window.playBeep();
+                    if(pomoMode === 'work') {
+                        window.addSessionRecord('Pomodoro', 25*60000); pomoMode = 'break';
+                        document.getElementById('pomo-status').innerText = "Mola Zamanı (5dk)"; timeRemaining = 5*60; document.getElementById('pomo-display').innerText = "05:00";
+                    } else {
+                        pomoMode = 'work'; document.getElementById('pomo-status').innerText = "Çalışma Odaklanması (25dk)"; timeRemaining = 25*60; document.getElementById('pomo-display').innerText = "25:00";
+                    }
+                    pomoTotalMs = timeRemaining * 1000;
+                    document.getElementById('btn-pomo-start').innerText = "Başlat";
+                }
+            }, 1000);
+        }
+        window.pausePomodoro = function() { clearInterval(intervalRef); intervalRef = null; document.getElementById('btn-pomo-start').innerText = "Devam"; }
+        window.resetPomodoro = function() { 
+            if(intervalRef) { clearInterval(intervalRef); intervalRef = null; }
+            let elapsed = pomoTotalMs - (timeRemaining * 1000);
+            if(pomoMode === 'work' && elapsed >= 60000) { window.addSessionRecord('Pomodoro', elapsed); } // Otomatik Kayıt
+            timeRemaining = 0; pomoTotalMs = 0; pomoMode='work'; document.getElementById('pomo-display').innerText = "25:00"; document.getElementById('pomo-status').innerText = "Çalışma Odaklanması"; document.getElementById('btn-pomo-start').innerText = "Başlat"; 
+        }
+
+        // --- CLOCKS (Header & Flip) ---
+        let lastH = -1, lastM = -1;
+        setInterval(() => {
+            const now = new Date();
+            const h = pad(now.getHours()), m = pad(now.getMinutes()), s = pad(now.getSeconds());
+            document.getElementById('header-clock').innerText = `${h}:${m}:${s}`;
+            if(h !== lastH) { triggerFlip('flip-h', h); lastH = h; }
+            if(m !== lastM) { triggerFlip('flip-m', m); lastM = m; }
+        }, 1000);
+
+        function triggerFlip(id, val) {
+            const el = document.getElementById(id);
+            if(!el) return;
+            el.classList.remove('flip-anim'); void el.offsetWidth; el.innerText = val; el.classList.add('flip-anim');
+        }
+
+        // --- SETTINGS ---
+        window.openSettings = function() { document.getElementById('set-target').value = window.appData.targetHours; document.getElementById('settings-modal').classList.add('active'); }
+        window.closeSettings = function() { document.getElementById('settings-modal').classList.remove('active'); }
+        window.saveSettings = function() { window.appData.targetHours = parseFloat(document.getElementById('set-target').value) || 6; window.saveData(); window.closeSettings(); }
+        window.resetAllData = function() { if(confirm("Veriler tamamen silinecek. Emin misin?")) { window.appData = { targetHours: 6, goals: [], todos: {}, agenda: {}, sessions: {}, stats: { streak: 0, lastStudyDate: null, totalPomo: 0 }}; window.saveData(); window.closeSettings(); } }
+
+    </script>
+</body>
+</html>
