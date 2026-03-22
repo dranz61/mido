@@ -12,6 +12,7 @@
         :root {
             --bg-main: #FFFFFF;
             --bg-card: #F5F5F7;
+            --bg-card-sec: #FAFAFA;
             --accent: #1D1D1F;
             --accent-hover: #3a3a3c;
             --link-cta: #0071E3;
@@ -73,7 +74,13 @@
 
         /* DASHBOARD GRID DESKTOP */
         #dashboard { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 24px; align-items: start; }
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1.6fr 1fr; 
+            gap: 24px; 
+            align-items: start; 
+            margin-top: 32px; /* <-- EKSIK OLAN BOSLUK EKLENDI */
+        }
 
         .card-center-main { background: #FFFFFF; box-shadow: var(--shadow-lg); padding: 32px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
         .progress-circle-wrap { position: relative; width: 180px; height: 180px; margin: 20px auto; }
@@ -138,7 +145,7 @@
 
         /* --- KUSURSUZ MOBİL OPTİMİZASYONU --- */
         @media (max-width: 1024px) { 
-            .grid-container { grid-template-columns: 1fr 1fr; } 
+            .grid-container { grid-template-columns: 1fr 1fr; margin-top: 32px; } 
             .col-center { grid-column: span 2; } 
         }
         
@@ -171,26 +178,22 @@
             .grid-container { 
                 display: flex; 
                 flex-direction: column; 
-                gap: 16px; /* Tüm kartlar arası eşit boşluk */
-                align-items: stretch; /* Sağa sola yaslanmayı engeller, tam genişlik yapar */
-                margin-top: 16px !important; 
+                gap: 16px; 
+                align-items: stretch; 
+                margin-top: 16px !important; /* Mobilde 32px fazla gelir, 16px idealdır */
             }
             
-            /* Sütunları kaldırıp kartları doğrudan grid-container'ın elemanı yapıyoruz */
             .col-left, .col-center, .col-right { display: contents; }
-            
-            /* Kartların genel ayarları (mobil) */
             .card { width: 100%; margin-bottom: 0 !important; padding: 20px; }
             
             /* Mobil Sıralama (Order) */
-            .card-center-main { order: 1; padding: 24px 20px; } /* Bugünkü İlerleme En Üstte */
+            .card-center-main { order: 1; padding: 24px 20px; } 
             .haftalik { order: 2; } 
-            .hedefler { order: 3; padding: 16px 20px !important; } /* İnce satır */
-            .todo { order: 4; padding: 16px 20px !important; } /* İnce satır */
+            .hedefler { order: 3; padding: 16px 20px !important; } 
+            .todo { order: 4; padding: 16px 20px !important; } 
             .agenda { order: 5; } 
             .istatistikler { order: 6; }
 
-            /* İnce Satır Başlık Ayarları */
             .hedefler .card-title, .todo .card-title { margin-bottom: 12px; font-size: 1.1rem; }
             #goals-list, #todo-list { max-height: 150px; }
 
@@ -198,7 +201,6 @@
             .progress-time { font-size: 1.3rem; }
             .btn-start-large { padding: 14px; font-size: 1rem; }
 
-            /* Study Mode Mobil Düzeni */
             #study-mode { padding: 20px; }
             .flip-clock { margin-bottom: 40px; gap: 10px; }
             .flip-card { width: 80px; height: 110px; font-size: 3.5rem; }
