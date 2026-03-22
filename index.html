@@ -12,7 +12,6 @@
         :root {
             --bg-main: #FFFFFF;
             --bg-card: #F5F5F7;
-            --bg-card-sec: #FAFAFA;
             --accent: #1D1D1F;
             --accent-hover: #3a3a3c;
             --link-cta: #0071E3;
@@ -59,20 +58,20 @@
         input:focus { border-color: var(--accent); outline: none; }
         input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
 
+        /* HEADER DESKTOP */
         header { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-bottom: 1px solid var(--border); background: var(--bg-main); position: sticky; top: 0; z-index: 100; }
         .logo { font-family: var(--font-head); font-size: 2rem; color: var(--text-main); }
         .header-center { display: flex; align-items: center; gap: 16px; color: var(--text-sec); font-weight: 500; }
-        
         .date-picker-wrap { position: relative; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: var(--radius-sm); transition: var(--transition); }
         .date-picker-wrap:hover { background: var(--bg-card); }
         .date-picker-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .live-clock-sm { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent); font-weight: 700; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
-        
         .header-right { display: flex; align-items: center; gap: 16px; }
         .btn-kunduz { text-decoration: none; padding: 8px 16px; font-size: 0.9rem; }
         .btn-settings { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--accent); display: flex; align-items: center; justify-content: center; }
         .btn-settings:hover { background: #E5E5EA; }
 
+        /* DASHBOARD GRID DESKTOP */
         #dashboard { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
         .grid-container { display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 24px; align-items: start; }
 
@@ -137,51 +136,65 @@
         .toast { position: fixed; top: 20px; right: 20px; background: var(--accent); color: white; padding: 12px 24px; border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-weight: 500; z-index: 9999; opacity: 0; transform: translateY(-20px); transition: var(--transition); }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        /* --- MOBİL OPTİMİZASYONU (Sıfır Beyaz Boşluk, Kusursuz Düzen) --- */
+        /* --- KUSURSUZ MOBİL OPTİMİZASYONU --- */
         @media (max-width: 1024px) { 
             .grid-container { grid-template-columns: 1fr 1fr; } 
             .col-center { grid-column: span 2; } 
         }
         
         @media (max-width: 768px) { 
-            /* Header Mobil Düzeni */
+            /* Header Hizalaması */
             header { 
                 display: grid; 
                 grid-template-columns: 1fr auto; 
-                row-gap: 16px; 
+                grid-template-areas: 
+                    "logo right"
+                    "center center";
+                gap: 16px; 
                 padding: 16px 20px; 
             }
-            .logo { grid-column: 1 / 2; grid-row: 1; font-size: 1.6rem; align-self: center; }
-            .header-right { grid-column: 2 / 3; grid-row: 1; gap: 8px; }
-            .btn-kunduz { padding: 8px 12px; font-size: 0.85rem; }
-            .btn-settings { width: 36px; height: 36px; }
+            .logo { grid-area: logo; align-self: center; font-size: 1.8rem; }
+            .header-right { grid-area: right; align-self: center; gap: 12px; }
             .header-center { 
-                grid-column: 1 / 3; 
-                grid-row: 2; 
+                grid-area: center; 
+                width: 100%; 
                 justify-content: center; 
                 background: var(--bg-card); 
-                padding: 8px; 
+                padding: 10px; 
                 border-radius: var(--radius-sm); 
-                width: 100%;
             }
-            .date-picker-wrap { width: 100%; justify-content: center; }
-            .live-clock-sm { display: none; } /* Mobilde üst barı temiz tutmak için saati gizledik */
+            .btn-kunduz { padding: 8px 14px; font-size: 0.9rem; }
+            .live-clock-sm { display: none; } 
 
-            /* Dashboard Mobil Düzeni */
+            /* Dashboard Grid -> Flex Yığılması ve Tam Genişlik */
             #dashboard { padding: 16px 20px; }
             .grid-container { 
                 display: flex; 
                 flex-direction: column; 
-                gap: 16px; 
+                gap: 16px; /* Tüm kartlar arası eşit boşluk */
+                align-items: stretch; /* Sağa sola yaslanmayı engeller, tam genişlik yapar */
                 margin-top: 16px !important; 
             }
-            /* En kritik hamle: İlerleme kartını mobilde EN ÜSTE çektik */
-            .col-center { order: -1; }
             
-            /* Kart Optimizasyonları */
-            .card { padding: 20px; margin-bottom: 0; }
-            .card-center-main { padding: 24px 20px; }
-            .progress-circle-wrap { width: 140px; height: 140px; margin: 10px auto; }
+            /* Sütunları kaldırıp kartları doğrudan grid-container'ın elemanı yapıyoruz */
+            .col-left, .col-center, .col-right { display: contents; }
+            
+            /* Kartların genel ayarları (mobil) */
+            .card { width: 100%; margin-bottom: 0 !important; padding: 20px; }
+            
+            /* Mobil Sıralama (Order) */
+            .card-center-main { order: 1; padding: 24px 20px; } /* Bugünkü İlerleme En Üstte */
+            .haftalik { order: 2; } 
+            .hedefler { order: 3; padding: 16px 20px !important; } /* İnce satır */
+            .todo { order: 4; padding: 16px 20px !important; } /* İnce satır */
+            .agenda { order: 5; } 
+            .istatistikler { order: 6; }
+
+            /* İnce Satır Başlık Ayarları */
+            .hedefler .card-title, .todo .card-title { margin-bottom: 12px; font-size: 1.1rem; }
+            #goals-list, #todo-list { max-height: 150px; }
+
+            .progress-circle-wrap { width: 150px; height: 150px; margin: 10px auto; }
             .progress-time { font-size: 1.3rem; }
             .btn-start-large { padding: 14px; font-size: 1rem; }
 
@@ -201,7 +214,7 @@
         <header>
             <div class="logo">MidoStudy</div>
             <div class="header-center">
-                <label class="date-picker-wrap">
+                <label class="date-picker-wrap" style="width: 100%; justify-content: center;">
                     <span id="date-display" style="font-weight: 600; color: var(--text-main);">Tarih Yükleniyor...</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     <input type="date" id="history-date-picker" class="date-picker-input" onchange="window.changeViewDate(this.value)">
@@ -364,7 +377,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAXUUW1XrkTHtEkNLPzd7F4P0jBiP5KnzU",
@@ -380,10 +393,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         
-        // Kişiselleştirilmiş DB Node (mirza için)
         const dbRef = ref(db, 'users/mirza_data');
 
-        // --- GLOBAL STATE ---
         const realTodayStr = new Date().toISOString().split('T')[0];
         window.currentViewDate = realTodayStr; 
         
@@ -398,11 +409,8 @@
             if(!window.appData.sessions[dateStr]) window.appData.sessions[dateStr] = [];
         }
 
-        // Firebase'den İlk Çekim
         get(dbRef).then((snapshot) => {
-            if (snapshot.exists()) {
-                window.appData = snapshot.val();
-            }
+            if (snapshot.exists()) { window.appData = snapshot.val(); }
             initDateData(realTodayStr);
             document.getElementById('history-date-picker').value = realTodayStr;
             window.updateDashboard();
@@ -412,7 +420,6 @@
             window.updateDashboard();
         });
 
-        // Firebase'e Senkronize Kayıt
         window.saveData = function() {
             set(dbRef, window.appData).then(() => {
                 window.updateDashboard();
@@ -426,7 +433,6 @@
             window.updateDashboard();
         }
 
-        // --- UTILS ---
         window.formatTimeSpan = function(ms) {
             let totalMin = Math.floor(ms / 60000);
             let h = Math.floor(totalMin / 60);
@@ -437,8 +443,7 @@
         
         window.showToast = function(msg) {
             const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.classList.add('show');
+            toast.innerText = msg; toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
@@ -452,7 +457,6 @@
             } catch(e) {}
         }
 
-        // --- DASHBOARD RENDER ---
         window.updateDashboard = function() {
             const dateObj = new Date(window.currentViewDate);
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -487,7 +491,6 @@
             window.renderTodos(); window.renderGoals(); window.renderAgenda(); window.renderChart();
         }
 
-        // --- CHART (SVG) ---
         window.renderChart = function() {
             const container = document.getElementById('chart-container');
             let svgHTML = `<svg class="weekly-chart" viewBox="0 0 300 120">`;
@@ -519,7 +522,6 @@
             document.getElementById('stat-week-avg').innerText = `Ort: ${window.formatTimeSpan(totalWeekMs/7)}`;
         }
 
-        // --- LISTS ---
         window.addGoal = function() { const t = prompt("Hedef:"); if(t) { window.appData.goals.push({ id: Date.now(), text: t, done: false }); window.saveData(); } }
         window.toggleGoal = function(id) { let g = window.appData.goals.find(x => x.id === id); if(g) { g.done = !g.done; window.saveData(); } }
         window.deleteGoal = function(id) { window.appData.goals = window.appData.goals.filter(x => x.id !== id); window.saveData(); }
@@ -538,7 +540,6 @@
             list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Görev yok.</div>';
         }
 
-        // --- AGENDA ---
         window.openAgendaModal = function() { document.getElementById('agenda-time').value = ''; document.getElementById('agenda-title').value = ''; document.getElementById('agenda-modal').classList.add('active'); }
         window.closeAgendaModal = function() { document.getElementById('agenda-modal').classList.remove('active'); }
         window.saveAgenda = function() {
@@ -552,7 +553,6 @@
             list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Plan yok.</div>';
         }
 
-        // --- STUDY MODE MANTIĞI & OTOMATİK KAYITLAR ---
         let intervalRef = null, timeRemaining = 0, swTime = 0, swStart = 0;
         let timerStartMs = 0, pomoTotalMs = 0;
 
@@ -574,11 +574,10 @@
         }
 
         window.addSessionRecord = function(type, durationMs) {
-            if(durationMs < 60000) return; // 1 dakikadan azsa kaydetme
+            if(durationMs < 60000) return; 
             initDateData(realTodayStr);
             window.appData.sessions[realTodayStr].push({ id: Date.now(), type: type, durationMs: durationMs, time: new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) });
             if(window.appData.stats.lastStudyDate !== realTodayStr) { window.appData.stats.streak++; window.appData.stats.lastStudyDate = realTodayStr; }
-            if(type === 'Pomodoro') window.appData.stats.totalPomo++;
             
             if(window.currentViewDate !== realTodayStr) {
                 window.currentViewDate = realTodayStr;
@@ -588,7 +587,6 @@
             window.showToast(`${window.formatTimeSpan(durationMs)} senkronize edildi.`);
         }
 
-        // TIMER (Sayaç)
         window.startTimer = function() {
             if(intervalRef) return;
             if(timeRemaining === 0) {
@@ -610,7 +608,6 @@
             timeRemaining = 0; timerStartMs = 0; document.getElementById('timer-display').innerText = "00:00"; document.getElementById('btn-timer-start').innerText = "Başlat";
         }
 
-        // STOPWATCH (Kronometre)
         window.startStopwatch = function() {
             if(intervalRef) return; swStart = Date.now() - swTime; document.getElementById('btn-sw-start').innerText = "Çalışıyor";
             intervalRef = setInterval(() => {
@@ -625,7 +622,6 @@
             swTime = 0; document.getElementById('sw-display').innerText = "00:00:00"; document.getElementById('btn-sw-start').innerText = "Başlat"; 
         }
 
-        // POMODORO
         let pomoMode = 'work';
         window.startPomodoro = function() {
             if(intervalRef) return;
@@ -657,7 +653,6 @@
             timeRemaining = 0; pomoTotalMs = 0; pomoMode='work'; document.getElementById('pomo-display').innerText = "25:00"; document.getElementById('pomo-status').innerText = "Çalışma Odaklanması"; document.getElementById('btn-pomo-start').innerText = "Başlat"; 
         }
 
-        // --- CLOCKS (Header & Flip) ---
         let lastH = -1, lastM = -1;
         setInterval(() => {
             const now = new Date();
@@ -673,7 +668,6 @@
             el.classList.remove('flip-anim'); void el.offsetWidth; el.innerText = val; el.classList.add('flip-anim');
         }
 
-        // --- SETTINGS ---
         window.openSettings = function() { document.getElementById('set-target').value = window.appData.targetHours; document.getElementById('settings-modal').classList.add('active'); }
         window.closeSettings = function() { document.getElementById('settings-modal').classList.remove('active'); }
         window.saveSettings = function() { window.appData.targetHours = parseFloat(document.getElementById('set-target').value) || 6; window.saveData(); window.closeSettings(); }
