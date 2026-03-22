@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1D1D1F">
+    <meta name="theme-color" content="#070303">
     <link rel="manifest" href="./manifest.json">
     <title>MidoStudy - Odaklanma Alanı</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- TASARIM SİSTEMİ & RENK PALETİ --- */
+        /* --- PREMIUM BORDO NEON / DARK MODE --- */
         :root {
-            --bg-main: #FFFFFF;
-            --bg-card: #F5F5F7;
-            --bg-card-sec: #FAFAFA;
-            --accent: #1D1D1F;
-            --accent-hover: #3a3a3c;
-            --link-cta: #0071E3;
-            --navy-blue: #153259;
-            --text-main: #1D1D1F;
-            --text-sec: #6E6E73;
-            --border: #D2D2D7;
+            --bg-main: #070303; 
+            --bg-card: #0f0707; 
+            --accent: #FFFFFF; 
+            --accent-hover: #E5E5EA;
+            --accent-text: #070303; 
+            --neon-bordo: #A30015; 
+            --text-main: #FFFFFF; 
+            --text-sec: #8c8585; 
             --success: #34C759;
             --warning: #FF9500;
             --danger: #FF3B30;
@@ -31,162 +29,187 @@
             --radius-card: 16px;
             --radius-btn: 12px;
             --radius-sm: 8px;
-            --shadow-card: 0 2px 12px rgba(0,0,0,0.07);
-            --shadow-lg: 0 4px 24px rgba(0,0,0,0.10);
-            --transition: all 0.3s ease-out;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: var(--bg-main); color: var(--text-main); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(163, 0, 21, 0.4); border-radius: 10px; }
 
-        .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 24px; box-shadow: var(--shadow-card); border: 1px solid var(--border); margin-bottom: 24px; transition: var(--transition); }
-        .card-title { font-family: var(--font-head); font-size: 1.25rem; color: var(--text-main); margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-
-        button { cursor: pointer; border: none; outline: none; font-family: var(--font-body); transition: var(--transition); }
-        .btn-black { background: var(--accent); color: #FFFFFF; padding: 12px 24px; border-radius: var(--radius-btn); font-weight: 500; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-black:hover { background: var(--accent-hover); transform: translateY(-2px); }
-        .btn-icon { background: transparent; color: var(--text-sec); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .btn-icon:hover { color: var(--accent); background: rgba(0,0,0,0.05); }
-
-        input, select, textarea { background: #FFFFFF; border: 1px solid var(--border); color: var(--text-main); padding: 10px 14px; border-radius: var(--radius-sm); font-family: var(--font-body); width: 100%; transition: var(--transition); }
-        input:focus { border-color: var(--accent); outline: none; }
-        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
-
-        /* HEADER DESKTOP */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-bottom: 1px solid var(--border); background: var(--bg-main); position: sticky; top: 0; z-index: 100; }
-        .logo { font-family: var(--font-head); font-size: 2rem; color: var(--text-main); }
-        .header-center { display: flex; align-items: center; gap: 16px; color: var(--text-sec); font-weight: 500; }
-        .date-picker-wrap { position: relative; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: var(--radius-sm); transition: var(--transition); }
-        .date-picker-wrap:hover { background: var(--bg-card); }
-        .date-picker-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-        .live-clock-sm { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent); font-weight: 700; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
-        .header-right { display: flex; align-items: center; gap: 16px; }
-        .btn-kunduz { text-decoration: none; padding: 8px 16px; font-size: 0.9rem; }
-        .btn-settings { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--accent); display: flex; align-items: center; justify-content: center; }
-        .btn-settings:hover { background: #E5E5EA; }
-
-        /* DASHBOARD GRID DESKTOP */
-        #dashboard { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: 1fr 1.6fr 1fr; 
-            gap: 24px; 
-            align-items: start; 
-            margin-top: 32px; /* <-- EKSIK OLAN BOSLUK EKLENDI */
+        /* KARTLAR VE BİRAZ DAHA PARLAK BORDO LED */
+        .card { 
+            background: var(--bg-card); 
+            border-radius: var(--radius-card); 
+            padding: 24px; 
+            margin-bottom: 24px; 
+            transition: var(--transition);
+            border: 1px solid rgba(163, 0, 21, 0.6);
+            box-shadow: 0 0 20px rgba(163, 0, 21, 0.25), inset 0 0 12px rgba(163, 0, 21, 0.15);
         }
+        .card:hover {
+            border-color: rgba(163, 0, 21, 0.9);
+            box-shadow: 0 0 28px rgba(163, 0, 21, 0.35), inset 0 0 18px rgba(163, 0, 21, 0.2);
+        }
+        .card-title { font-family: var(--font-head); font-size: 1.3rem; color: var(--text-main); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.5px; }
 
-        .card-center-main { background: #FFFFFF; box-shadow: var(--shadow-lg); padding: 32px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
-        .progress-circle-wrap { position: relative; width: 180px; height: 180px; margin: 20px auto; }
+        /* BUTONLAR */
+        button { cursor: pointer; border: none; outline: none; font-family: var(--font-body); transition: var(--transition); }
+        .btn-black { 
+            background: var(--accent); color: var(--accent-text); 
+            padding: 12px 24px; border-radius: var(--radius-btn); font-weight: 700; font-size: 1rem; 
+            display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(255,255,255,0.05);
+        }
+        .btn-black:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,255,255,0.15); }
+        .btn-icon { background: transparent; color: var(--text-sec); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+        .btn-icon:hover { color: var(--neon-bordo); text-shadow: 0 0 10px var(--neon-bordo); }
+
+        /* FORM ELEMANLARI */
+        input, select, textarea { 
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(163,0,21,0.4); 
+            color: var(--text-main); padding: 12px 16px; border-radius: var(--radius-sm); font-family: var(--font-body); width: 100%; transition: var(--transition); 
+        }
+        input:focus { border-color: var(--neon-bordo); outline: none; box-shadow: 0 0 15px rgba(163,0,21,0.4); background: rgba(255,255,255,0.05); }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--neon-bordo); cursor: pointer; }
+
+        /* HEADER SİMETRİK VE SADE DÜZEN */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-bottom: 1px solid rgba(163,0,21,0.3); box-shadow: 0 4px 25px rgba(163,0,21,0.1); background: var(--bg-main); position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: var(--font-head); font-size: 2.2rem; color: var(--text-main); text-shadow: 0 0 15px rgba(255,255,255,0.2); letter-spacing: 1px; }
+        
+        .header-center { display: flex; align-items: center; gap: 16px; color: var(--text-sec); font-weight: 500; flex-wrap: wrap; justify-content: center; }
+        
+        /* Ortadaki 3'lü Elementin Ortak Zarif Stili */
+        .yks-compact, .date-picker-wrap, .live-clock-sm {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .yks-compact { font-size: 0.95rem; }
+        .yks-compact span { font-family: var(--font-mono); margin-left: 6px; font-weight: 700; color: var(--text-main); }
+        
+        .date-picker-wrap { position: relative; cursor: pointer; gap: 8px; }
+        .date-picker-wrap:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
+        .date-picker-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        
+        .live-clock-sm { font-family: var(--font-mono); font-size: 1rem; font-weight: 700; }
+
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .btn-kunduz { text-decoration: none; padding: 8px 16px; font-size: 0.95rem; }
+        .btn-settings { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: var(--text-main); display: flex; align-items: center; justify-content: center; }
+        .btn-settings:hover { border-color: var(--neon-bordo); box-shadow: 0 0 15px rgba(163,0,21,0.4); background: rgba(163,0,21,0.1); }
+
+        /* DASHBOARD GRID */
+        #dashboard { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 24px; align-items: start; margin-top: 32px; }
+
+        /* MERKEZ İLERLEME KARTI */
+        .card-center-main { display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+        .progress-circle-wrap { position: relative; width: 200px; height: 200px; margin: 20px auto; }
         .progress-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
         .progress-svg circle { fill: none; stroke-width: 14; stroke-linecap: round; }
-        .prog-bg { stroke: var(--bg-card); }
-        .prog-bar { stroke: var(--navy-blue); stroke-dasharray: 540; stroke-dashoffset: 540; transition: stroke-dashoffset 1s ease-out, stroke 0.5s; }
+        .prog-bg { stroke: rgba(255,255,255,0.03); }
+        .prog-bar { stroke: var(--neon-bordo); stroke-dasharray: 540; stroke-dashoffset: 540; transition: stroke-dashoffset 1s ease-out, stroke 0.5s; filter: drop-shadow(0 0 15px rgba(163,0,21,0.9)); }
         
         .progress-text-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; }
-        .progress-time { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; color: var(--text-main); }
-        .progress-target { font-size: 0.85rem; color: var(--text-sec); margin-top: 4px; }
-        .progress-status { font-weight: 500; color: var(--navy-blue); margin-bottom: 30px; }
-        .btn-start-large { width: 100%; font-size: 1.1rem; padding: 16px; margin-top: auto; }
+        .progress-time { font-family: var(--font-mono); font-size: 1.7rem; font-weight: 700; color: var(--text-main); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .progress-target { font-size: 0.9rem; color: var(--text-sec); margin-top: 4px; }
+        .progress-status { font-weight: 500; color: var(--text-main); margin-bottom: 30px; font-size: 1.05rem; }
+        .btn-start-large { width: 100%; font-size: 1.15rem; padding: 16px; margin-top: auto; letter-spacing: 0.5px; }
 
+        /* HAFTALIK GRAFİK */
         .chart-wrap { height: 160px; width: 100%; margin-top: 10px; }
         svg.weekly-chart { width: 100%; height: 100%; overflow: visible; }
-        .bar { fill: var(--border); transition: var(--transition); rx: 4; }
-        .bar-today { fill: var(--accent); }
+        .bar { fill: rgba(255,255,255,0.1); transition: var(--transition); rx: 4; }
+        .bar:hover { fill: rgba(163,0,21,0.5); }
+        .bar-today { fill: var(--neon-bordo); filter: drop-shadow(0 0 10px rgba(163,0,21,0.8)); }
         .bar-text { fill: var(--text-sec); font-size: 11px; font-family: var(--font-body); text-anchor: middle; }
-        .target-line { stroke: var(--link-cta); stroke-dasharray: 4,4; stroke-width: 1.5; }
-        .chart-stats { display: flex; justify-content: space-between; margin-top: 16px; font-size: 0.85rem; color: var(--text-sec); font-weight: 500; }
+        .target-line { stroke: var(--text-main); stroke-dasharray: 4,4; stroke-width: 1; opacity: 0.3; }
+        .chart-stats { display: flex; justify-content: space-between; margin-top: 16px; font-size: 0.9rem; color: var(--text-sec); font-weight: 500; }
 
-        .list-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; }
-        .list-row.completed span.item-text { text-decoration: line-through; opacity: 0.45; }
+        /* LİSTELER */
+        .list-row { display: flex; align-items: center; gap: 12px; padding: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: var(--radius-sm); margin-bottom: 10px; }
+        .list-row.completed span.item-text { text-decoration: line-through; opacity: 0.3; }
         .item-text { flex-grow: 1; font-weight: 500; font-size: 0.95rem; }
-        .btn-delete { background: transparent; color: var(--text-sec); font-size: 1.2rem; cursor: pointer; border: none; padding: 0 4px; }
-        .btn-delete:hover { color: var(--danger); }
+        .btn-delete { background: transparent; color: var(--text-sec); font-size: 1.3rem; cursor: pointer; border: none; padding: 0 4px; }
+        .btn-delete:hover { color: var(--neon-bordo); text-shadow: 0 0 10px var(--neon-bordo); }
 
+        /* ZAMAN ÇİZELGESİ & İSTATİSTİKLER */
         .agenda-list { max-height: 250px; overflow-y: auto; padding-right: 5px; }
-        .agenda-item { padding: 12px; border-left: 3px solid var(--accent); background: #FFFFFF; margin-bottom: 8px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; border: 1px solid var(--border); border-left-width: 3px; }
-        .agenda-time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-sec); margin-bottom: 4px; }
+        .agenda-item { padding: 14px; border-left: 3px solid var(--neon-bordo); background: rgba(255,255,255,0.02); margin-bottom: 10px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; border: 1px solid rgba(255,255,255,0.05); border-left-width: 3px; box-shadow: -3px 0 15px rgba(163,0,21,0.3); }
+        .agenda-time { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-sec); margin-bottom: 4px; }
         
-        .stat-box { background: #FFFFFF; border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-sm); text-align: center; margin-bottom: 12px; }
-        .stat-val { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 700; color: var(--accent); }
-        .quote-box { font-style: italic; color: var(--text-sec); border-left: 2px solid var(--border); padding-left: 12px; margin-bottom: 20px; font-size: 0.95rem; }
+        .stat-box { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: var(--radius-sm); text-align: center; margin-bottom: 12px; }
+        .stat-val { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; color: var(--text-main); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .quote-box { font-style: italic; color: var(--text-sec); border-left: 2px solid var(--neon-bordo); padding: 16px; margin-bottom: 24px; font-size: 1rem; box-shadow: -3px 0 15px rgba(163,0,21,0.2); background: rgba(163,0,21,0.03); }
 
         /* STUDY MODE */
-        #study-mode { background: var(--bg-card); min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center; }
+        #study-mode { background: var(--bg-main); min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center; }
         .study-header { width: 100%; max-width: 800px; display: flex; justify-content: flex-start; margin-bottom: 60px; }
         
         .flip-clock { display: flex; align-items: center; gap: 15px; margin-bottom: 60px; }
-        .flip-card { background: var(--accent); color: #FFFFFF; font-family: var(--font-mono); font-size: 5rem; font-weight: 700; width: 110px; height: 140px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-btn); box-shadow: 0 8px 32px rgba(0,0,0,0.18); position: relative; }
-        .flip-card::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.12); }
-        .flip-colon { font-family: var(--font-mono); font-size: 4rem; color: var(--accent); font-weight: 700; margin: 0 -5px; padding-bottom: 10px; }
+        .flip-card { 
+            background: #000000; color: #FFFFFF; font-family: var(--font-mono); font-size: 5.5rem; font-weight: 700; 
+            width: 120px; height: 150px; display: flex; align-items: center; justify-content: center; 
+            border-radius: var(--radius-btn); position: relative;
+            border: 1px solid rgba(163,0,21, 0.8);
+            box-shadow: 0 0 30px rgba(163,0,21, 0.5), inset 0 0 20px rgba(163,0,21, 0.3);
+            text-shadow: 0 0 15px rgba(255,255,255,0.3);
+        }
+        .flip-card::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: rgba(163,0,21,0.6); box-shadow: 0 0 10px var(--neon-bordo); }
+        .flip-colon { font-family: var(--font-mono); font-size: 4.5rem; color: var(--text-main); font-weight: 700; margin: 0 -5px; padding-bottom: 10px; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
 
         .timer-wrapper { max-width: 500px; width: 100%; }
-        .tabs { display: flex; background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-btn); overflow: hidden; margin-bottom: 24px; }
-        .tab-btn { flex: 1; padding: 14px; background: transparent; color: var(--text-sec); font-weight: 500; }
-        .tab-btn.active { background: var(--accent); color: #FFFFFF; }
+        .tabs { display: flex; background: rgba(255,255,255,0.02); border: 1px solid rgba(163,0,21,0.5); border-radius: var(--radius-btn); overflow: hidden; margin-bottom: 24px; box-shadow: 0 0 20px rgba(163,0,21,0.2); }
+        .tab-btn { flex: 1; padding: 16px; background: transparent; color: var(--text-sec); font-weight: 500; font-size: 1.05rem; }
+        .tab-btn.active { background: rgba(163,0,21,0.25); color: #FFFFFF; text-shadow: 0 0 10px #FFF; }
         
-        .timer-content { background: #FFFFFF; padding: 40px; border-radius: var(--radius-card); border: 1px solid var(--border); text-align: center; box-shadow: var(--shadow-card); }
-        .digital-display { font-family: var(--font-mono); font-size: 3.5rem; font-weight: 700; color: var(--accent); margin: 20px 0 30px; letter-spacing: -2px; }
+        .timer-content { background: var(--bg-card); padding: 40px; border-radius: var(--radius-card); border: 1px solid rgba(163,0,21,0.6); text-align: center; box-shadow: 0 0 35px rgba(163,0,21,0.25); }
+        .digital-display { font-family: var(--font-mono); font-size: 4rem; font-weight: 700; color: var(--text-main); margin: 20px 0 30px; letter-spacing: -2px; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
         .controls { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
         /* MODALS & NOTIFICATIONS */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: var(--transition); }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: var(--transition); }
         .modal.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--bg-main); padding: 32px; border-radius: var(--radius-card); width: 400px; max-width: 90%; box-shadow: 0 24px 48px rgba(0,0,0,0.15); border: 1px solid var(--border); transform: scale(0.96); transition: var(--transition); }
+        .modal-content { background: var(--bg-card); padding: 32px; border-radius: var(--radius-card); width: 400px; max-width: 90%; border: 1px solid rgba(163,0,21,0.7); box-shadow: 0 0 45px rgba(163,0,21,0.4); transform: scale(0.96); transition: var(--transition); }
         .modal.active .modal-content { transform: scale(1); }
-        .toast { position: fixed; top: 20px; right: 20px; background: var(--accent); color: white; padding: 12px 24px; border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-weight: 500; z-index: 9999; opacity: 0; transform: translateY(-20px); transition: var(--transition); }
+        .toast { position: fixed; top: 20px; right: 20px; background: var(--text-main); color: var(--accent-text); padding: 12px 24px; border-radius: var(--radius-sm); box-shadow: 0 0 20px rgba(255,255,255,0.4); font-weight: 700; z-index: 9999; opacity: 0; transform: translateY(-20px); transition: var(--transition); }
         .toast.show { opacity: 1; transform: translateY(0); }
 
-        /* --- KUSURSUZ MOBİL OPTİMİZASYONU --- */
+        /* MOBİL OPTİMİZASYONU */
         @media (max-width: 1024px) { 
-            .grid-container { grid-template-columns: 1fr 1fr; margin-top: 32px; } 
+            .grid-container { grid-template-columns: 1fr 1fr; } 
             .col-center { grid-column: span 2; } 
         }
         
         @media (max-width: 768px) { 
-            /* Header Hizalaması */
-            header { 
-                display: grid; 
-                grid-template-columns: 1fr auto; 
-                grid-template-areas: 
-                    "logo right"
-                    "center center";
-                gap: 16px; 
-                padding: 16px 20px; 
-            }
+            header { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo right" "center center"; gap: 16px; padding: 16px 20px; }
             .logo { grid-area: logo; align-self: center; font-size: 1.8rem; }
             .header-right { grid-area: right; align-self: center; gap: 12px; }
-            .header-center { 
-                grid-area: center; 
-                width: 100%; 
-                justify-content: center; 
-                background: var(--bg-card); 
-                padding: 10px; 
-                border-radius: var(--radius-sm); 
-            }
+            
+            /* Mobil Header Center Hizalaması */
+            .header-center { grid-area: center; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+            
+            .yks-compact, .live-clock-sm, .date-picker-wrap { font-size: 0.9rem; padding: 6px 12px; }
             .btn-kunduz { padding: 8px 14px; font-size: 0.9rem; }
-            .live-clock-sm { display: none; } 
 
-            /* Dashboard Grid -> Flex Yığılması ve Tam Genişlik */
             #dashboard { padding: 16px 20px; }
-            .grid-container { 
-                display: flex; 
-                flex-direction: column; 
-                gap: 16px; 
-                align-items: stretch; 
-                margin-top: 16px !important; /* Mobilde 32px fazla gelir, 16px idealdır */
-            }
+            .grid-container { display: flex; flex-direction: column; gap: 20px; align-items: stretch; margin-top: 16px; }
             
             .col-left, .col-center, .col-right { display: contents; }
             .card { width: 100%; margin-bottom: 0 !important; padding: 20px; }
             
-            /* Mobil Sıralama (Order) */
             .card-center-main { order: 1; padding: 24px 20px; } 
             .haftalik { order: 2; } 
             .hedefler { order: 3; padding: 16px 20px !important; } 
@@ -194,19 +217,19 @@
             .agenda { order: 5; } 
             .istatistikler { order: 6; }
 
-            .hedefler .card-title, .todo .card-title { margin-bottom: 12px; font-size: 1.1rem; }
+            .hedefler .card-title, .todo .card-title { margin-bottom: 12px; font-size: 1.2rem; }
             #goals-list, #todo-list { max-height: 150px; }
 
-            .progress-circle-wrap { width: 150px; height: 150px; margin: 10px auto; }
-            .progress-time { font-size: 1.3rem; }
+            .progress-circle-wrap { width: 160px; height: 160px; margin: 10px auto; }
+            .progress-time { font-size: 1.4rem; }
             .btn-start-large { padding: 14px; font-size: 1rem; }
 
             #study-mode { padding: 20px; }
             .flip-clock { margin-bottom: 40px; gap: 10px; }
-            .flip-card { width: 80px; height: 110px; font-size: 3.5rem; }
-            .flip-colon { font-size: 3rem; }
+            .flip-card { width: 85px; height: 115px; font-size: 4rem; }
+            .flip-colon { font-size: 3.5rem; }
             .timer-content { padding: 30px 20px; }
-            .digital-display { font-size: 3rem; margin: 15px 0 25px; }
+            .digital-display { font-size: 3.2rem; margin: 15px 0 25px; }
         }
     </style>
 </head>
@@ -215,14 +238,19 @@
     <div id="dashboard" class="fade-in">
         <header>
             <div class="logo">MidoStudy</div>
+            
             <div class="header-center">
-                <label class="date-picker-wrap" style="width: 100%; justify-content: center;">
-                    <span id="date-display" style="font-weight: 600; color: var(--text-main);">Tarih Yükleniyor...</span>
+                <div class="yks-compact" id="yks-compact-timer">YKS 2027: Yükleniyor...</div>
+                
+                <label class="date-picker-wrap">
+                    <span id="date-display">Tarih Yükleniyor...</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     <input type="date" id="history-date-picker" class="date-picker-input" onchange="window.changeViewDate(this.value)">
                 </label>
+                
                 <div class="live-clock-sm" id="header-clock">00:00:00</div>
             </div>
+
             <div class="header-right">
                 <a href="https://kunduz.com/u/student/counseling/" target="_blank" class="btn-black btn-kunduz">🦫 Kunduz</a>
                 <button class="btn-settings" onclick="window.openSettings()" title="Ayarlar">
@@ -284,15 +312,15 @@
 
                 <div class="card istatistikler">
                     <div class="card-title">İstatistikler</div>
-                    <div class="quote-box" id="daily-quote">"Başarı, her gün tekrarlanan küçük çabaların toplamıdır."</div>
+                    <div class="quote-box" id="daily-quote">"Sızlanmayı bırak, hedefin için bugün ne yaptın?"</div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="stat-box">
-                            <div style="font-size:0.8rem; color:var(--text-sec); margin-bottom:4px;">Seri (Streak)</div>
+                            <div style="font-size:0.8rem; color:var(--text-sec); margin-bottom:6px;">Seri (Streak)</div>
                             <div class="stat-val" id="stat-streak">0</div>
                         </div>
                         <div class="stat-box">
-                            <div style="font-size:0.8rem; color:var(--text-sec); margin-bottom:4px;">Tüm Zamanlar</div>
-                            <div class="stat-val" style="font-size: 1.1rem; padding-top:4px;" id="stat-total-time">0s 0dk</div>
+                            <div style="font-size:0.8rem; color:var(--text-sec); margin-bottom:6px;">Tüm Zamanlar</div>
+                            <div class="stat-val" style="font-size: 1.2rem; padding-top:4px;" id="stat-total-time">0s 0dk</div>
                         </div>
                     </div>
                 </div>
@@ -319,7 +347,7 @@
             </div>
 
             <div id="tab-timer" class="timer-content">
-                <input type="number" id="timer-input-m" placeholder="Dk" style="width:100px; text-align:center; font-family:var(--font-mono); font-size:1.1rem;">
+                <input type="number" id="timer-input-m" placeholder="Dk" style="width:100px; text-align:center; font-family:var(--font-mono); font-size:1.1rem; background: rgba(255,255,255,0.05); margin-bottom: 10px;">
                 <div class="digital-display" id="timer-display">00:00</div>
                 <div class="controls">
                     <button class="btn-black" id="btn-timer-start" onclick="window.startTimer()">Başlat</button>
@@ -354,11 +382,11 @@
             <div class="card-title">Etkinlik Ekle <button class="btn-icon" onclick="window.closeAgendaModal()">✕</button></div>
             <div style="margin-bottom: 16px;">
                 <label style="font-size:0.85rem; color:var(--text-sec); font-weight:500;">Saat:</label>
-                <input type="time" id="agenda-time" style="margin-top:4px;">
+                <input type="time" id="agenda-time" style="margin-top:6px;">
             </div>
             <div style="margin-bottom: 24px;">
                 <label style="font-size:0.85rem; color:var(--text-sec); font-weight:500;">Açıklama:</label>
-                <input type="text" id="agenda-title" placeholder="Örn: Matematik Çalışması" style="margin-top:4px;">
+                <input type="text" id="agenda-title" placeholder="Örn: Matematik Çalışması" style="margin-top:6px;">
             </div>
             <button class="btn-black" style="width:100%" onclick="window.saveAgenda()">Ekle</button>
         </div>
@@ -394,7 +422,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        
         const dbRef = ref(db, 'users/mirza_data');
 
         const realTodayStr = new Date().toISOString().split('T')[0];
@@ -404,6 +431,8 @@
             targetHours: 6, goals: [], todos: {}, agenda: {}, sessions: {},
             stats: { streak: 0, lastStudyDate: null, totalPomo: 0 }
         };
+
+        const yksTargetDate = new Date("2027-06-19T10:15:00").getTime();
 
         function initDateData(dateStr) {
             if(!window.appData.todos[dateStr]) window.appData.todos[dateStr] = [];
@@ -662,6 +691,17 @@
             document.getElementById('header-clock').innerText = `${h}:${m}:${s}`;
             if(h !== lastH) { triggerFlip('flip-h', h); lastH = h; }
             if(m !== lastM) { triggerFlip('flip-m', m); lastM = m; }
+
+            const distance = yksTargetDate - now.getTime();
+            if (distance > 0) {
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h_left = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                
+                const yksEl = document.getElementById('yks-compact-timer');
+                if(yksEl) {
+                    yksEl.innerHTML = `YKS 2027 <span>${d}g ${pad(h_left)}sa</span>`;
+                }
+            }
         }, 1000);
 
         function triggerFlip(id, val) {
