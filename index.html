@@ -252,18 +252,21 @@
 
     <div id="settings-modal" class="modal">
         <div class="modal-content">
-            <div class="card-title">Ayarlar <button class="btn-icon" onclick="window.closeSettings()">✕</button></div>
+            <div class="card-title">
+                <span ondblclick="window.checkAdmin()" style="cursor: default; user-select: none;">Ayarlar</span> 
+                <button class="btn-icon" onclick="window.closeSettings()">✕</button>
+            </div>
             
             <div style="margin-bottom: 20px;">
                 <label style="font-size:0.9rem; font-weight:500; color:var(--text-sec);">Günlük Hedef (Saat):</label>
                 <input type="number" id="set-target" style="margin-top:8px;">
             </div>
 
-            <div style="margin-bottom: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
-                <label style="font-size:0.9rem; font-weight:500; color:var(--text-sec);">Unutulan Süreyi Ekle (Dakika):</label>
+            <div id="admin-panel" style="display: none; margin-bottom: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <label style="font-size:0.9rem; font-weight:500; color:#A30015;">Yönetici: Unutulan Süreyi Ekle (Dk)</label>
                 <div style="display:flex; gap:12px; margin-top:8px;">
                     <input type="number" id="manual-time-m" placeholder="Örn: 50" style="flex:1; margin:0;">
-                    <button class="btn-black" style="padding: 10px 20px;" onclick="window.addManualTime()">Ekle</button>
+                    <button class="btn-black" style="padding: 10px 20px; background: #A30015; color: #FFF;" onclick="window.addManualTime()">Ekle</button>
                 </div>
             </div>
 
@@ -303,7 +306,6 @@
             if(!window.appData.sessions[dateStr]) window.appData.sessions[dateStr] = [];
         }
 
-        // FİX: Veritabanı Çökme Koruması
         get(dbRef).then((snapshot) => {
             if (snapshot.exists()) { 
                 let data = snapshot.val();
@@ -375,7 +377,6 @@
             let svgHTML = `<svg class="weekly-chart" viewBox="0 0 300 120">`;
             let maxMs = window.appData.targetHours * 3600000; let daysData = [], totalWeekMs = 0;
             
-            // FİX: Gün İsimleri
             const trDays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 
             for(let i=6; i>=0; i--) {
@@ -428,15 +429,26 @@
             list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Plan yok.</div>';
         }
 
-        // YENİ MODALLAR
         window.openScheduleModal = function() { document.getElementById('schedule-modal').classList.add('active'); }
         window.closeScheduleModal = function() { document.getElementById('schedule-modal').classList.remove('active'); }
 
         window.openSettings = function() { document.getElementById('set-target').value = window.appData.targetHours; document.getElementById('settings-modal').classList.add('active'); }
-        window.closeSettings = function() { document.getElementById('settings-modal').classList.remove('active'); }
+        
+        // YENİ: Yönetici Parolası ve Kapatıldığında Gizleme
+        window.closeSettings = function() { 
+            document.getElementById('settings-modal').classList.remove('active'); 
+            document.getElementById('admin-panel').style.display = 'none';
+        }
+
+        window.checkAdmin = function() {
+            const pass = prompt("Yönetici Parolası:");
+            if(pass === "195141") {
+                document.getElementById('admin-panel').style.display = 'block';
+            }
+        }
+
         window.saveSettings = function() { window.appData.targetHours = parseFloat(document.getElementById('set-target').value) || 6; window.saveData(); window.updateDashboard(); window.closeSettings(); }
 
-        // YENİ: MANUEL SÜRE EKLEME (Geçmiş tarihlere de eklenebilir)
         window.addManualTime = function() {
             let mins = parseInt(document.getElementById('manual-time-m').value);
             if(mins && mins > 0) {
