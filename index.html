@@ -70,9 +70,12 @@
         .progress-svg circle { fill: none; stroke-width: 14; stroke-linecap: round; }
         .prog-bg { stroke: rgba(255,255,255,0.05); }
         .prog-bar { stroke: var(--text-main); stroke-dasharray: 540; stroke-dashoffset: 540; transition: stroke-dashoffset 1s linear, stroke 0.5s; }
-        .progress-text-inner { absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; }
-        .progress-time { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 700; color: var(--text-main); }
-        .progress-target { font-size: 0.9rem; color: var(--text-sec); margin-top: 4px; }
+        
+        /* FİX: Tam merkezi hizalama için Flexbox kullanıldı */
+        .progress-text-inner { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .progress-time { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 700; color: var(--text-main); text-align: center; }
+        .progress-target { font-size: 0.9rem; color: var(--text-sec); margin-top: 4px; text-align: center; }
+        
         .progress-status { font-weight: 500; color: var(--text-main); margin-bottom: 30px; font-size: 1.05rem; }
         .btn-start-large { width: 100%; font-size: 1.15rem; padding: 16px; margin-top: auto; letter-spacing: 0.5px; }
 
@@ -657,7 +660,6 @@
             }
         }
 
-        // YENİ: SABİT HAFTA GRAFİĞİ (Pazartesi'den Pazar'a)
         window.renderChart = function() {
             const container = document.getElementById('chart-container');
             let svgHTML = `<svg class="weekly-chart" viewBox="0 0 300 120">`;
@@ -665,9 +667,8 @@
             let daysData = [], totalWeekMs = 0;
             const trDays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 
-            // Seçili tarihin haftasının Pazartesi gününü bul
             let currD = new Date(window.currentViewDate + "T12:00:00");
-            let dayOfWeek = currD.getDay(); // 0:Pazar, 1:Pzt, ... 6:Cmt
+            let dayOfWeek = currD.getDay(); 
             let diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; 
             
             let startOfWeek = new Date(currD);
