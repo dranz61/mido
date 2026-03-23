@@ -45,7 +45,8 @@
         input:focus, textarea:focus { border-color: rgba(255,255,255,0.2); outline: none; background: rgba(255,255,255,0.06); }
         input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; filter: grayscale(1); }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 24px 40px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
+        /* ÜST BAR (İNCELTİLDİ) */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 16px 40px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100; }
         .logo { font-family: var(--font-head); font-size: 2.2rem; color: var(--text-main); letter-spacing: 1px; }
         .header-center { display: flex; align-items: center; gap: 16px; color: var(--text-sec); font-weight: 500; flex-wrap: wrap; justify-content: center; }
         .yks-compact, .date-picker-wrap, .live-clock-sm { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 8px 16px; border-radius: var(--radius-sm); color: var(--text-main); font-weight: 500; display: flex; align-items: center; transition: var(--transition); }
@@ -56,8 +57,8 @@
         .date-picker-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
         .live-clock-sm { font-family: var(--font-mono); font-size: 1rem; font-weight: 700; }
 
-        .header-right { display: flex; align-items: center; gap: 16px; }
-        .btn-kunduz { text-decoration: none; padding: 8px 16px; font-size: 0.95rem; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .btn-kunduz { text-decoration: none; padding: 6px 12px; font-size: 0.85rem; border-radius: 8px; }
         .btn-settings { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-main); display: flex; align-items: center; justify-content: center; }
         .btn-settings:hover { border-color: var(--accent); background: rgba(255,255,255,0.1); }
 
@@ -123,14 +124,18 @@
 
         @media (max-width: 1024px) { .grid-container { grid-template-columns: 1fr 1fr; margin-top: 32px; } .col-center { grid-column: span 2; } }
         @media (max-width: 768px) { 
-            header { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo right" "center center"; gap: 16px; padding: 16px 20px; }
+            header { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "logo right" "center center"; gap: 16px; padding: 12px 20px; }
             .logo { grid-area: logo; align-self: center; font-size: 1.8rem; }
-            .header-right { grid-area: right; align-self: center; gap: 12px; }
+            .header-right { grid-area: right; align-self: center; gap: 8px; }
             .header-center { grid-area: center; width: 100%; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+            .yks-compact, .live-clock-sm, .date-picker-wrap { font-size: 0.9rem; padding: 6px 12px; }
+            .btn-kunduz { padding: 6px 10px; font-size: 0.85rem; }
+            .btn-settings { width: 36px; height: 36px; }
+            #dashboard { padding: 16px 20px; }
             .grid-container { display: flex; flex-direction: column; gap: 24px; align-items: stretch; margin-top: 16px; padding: 0 20px; }
             .col-left, .col-center, .col-right { display: contents; }
             .card { width: 100%; margin-bottom: 0 !important; padding: 20px; }
-            .card-center-main { order: 1; padding: 24px 20px; } .haftalik { order: 2; } .hedefler { order: 3; } .todo { order: 4; } .kamp { order: 5; } .agenda { order: 6; } .istatistikler { order: 7; }
+            .card-center-main { order: 1; padding: 24px 20px; } .haftalik { order: 2; } .hedefler { order: 3; } .kamp { order: 4; } .agenda { order: 5; } .istatistikler { order: 6; }
         }
     </style>
 </head>
@@ -145,12 +150,18 @@
                 <div class="yks-compact" id="yks-compact-timer">YKS 2027: Yükleniyor...</div>
                 <label class="date-picker-wrap">
                     <span id="date-display">Tarih Yükleniyor...</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     <input type="date" id="history-date-picker" class="date-picker-input" onchange="window.changeViewDate(this.value)">
                 </label>
                 <div class="live-clock-sm" id="header-clock">00:00:00</div>
             </div>
             <div class="header-right">
-                <button class="btn-black" style="background:var(--neon-bordo); color:#FFF; border:none;" onclick="window.location.href='kaynaklar.html'">📚 Kaynaklar</button>
+                
+                <button class="btn-settings" onclick="window.location.href='kaynaklar.html'" title="Kaynak Matrisi">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    </svg>
+                </button>
 
                 <a href="https://kunduz.com/u/student/counseling/" target="_blank" class="btn-black btn-kunduz">🦫 Kunduz</a>
                 
@@ -172,12 +183,6 @@
                     <div class="chart-stats"><span id="stat-week-total">Toplam: 0s</span><span id="stat-week-avg">Ort: 0s</span></div>
                 </div>
                 
-                <div class="card todo">
-                    <div class="card-title">Görevler <button class="btn-icon" onclick="window.addTodo()">+</button></div>
-                    <div style="display:flex; gap:8px; margin-bottom:16px;"><input type="text" id="todo-input" placeholder="Yeni görev..."></div>
-                    <div id="todo-list"></div>
-                </div>
-
                 <div class="card kamp">
                     <div class="card-title">
                         <div style="display: flex; align-items: center; gap: 8px;">
@@ -243,12 +248,12 @@
                     </div>
             </div>
 
-            <div style="display: flex; gap: 12px; margin-bottom: 24px;">
-                <div style="flex: 1;">
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                <div>
                     <label style="font-size:0.85rem; color:var(--text-sec); font-weight:500;">Başlangıç:</label>
                     <input type="date" id="camp-start-input" style="margin-top:6px;">
                 </div>
-                <div style="flex: 1;">
+                <div>
                     <label style="font-size:0.85rem; color:var(--text-sec); font-weight:500;">Bitiş:</label>
                     <input type="date" id="camp-end-input" style="margin-top:6px;">
                 </div>
@@ -342,7 +347,7 @@
         const realTodayStr = window.getLocalYMD(new Date());
         window.currentViewDate = realTodayStr; 
         
-        window.appData = { targetHours: 6, goals: [], todos: {}, agenda: {}, sessions: {}, camps: [], stats: { streak: 0, lastStudyDate: null, totalPomo: 0 } };
+        window.appData = { targetHours: 6, goals: [], agenda: {}, sessions: {}, camps: [], stats: { streak: 0, lastStudyDate: null, totalPomo: 0 } };
         const yksTargetDate = new Date("2027-06-19T10:15:00").getTime();
 
         const AVAILABLE_SUBJECTS = [
@@ -351,10 +356,10 @@
         ];
 
         function initDateData(dateStr) {
-            if(!window.appData.todos[dateStr]) window.appData.todos[dateStr] = [];
             if(!window.appData.agenda[dateStr]) window.appData.agenda[dateStr] = [];
             if(!window.appData.sessions[dateStr]) window.appData.sessions[dateStr] = [];
             if(!window.appData.camps) window.appData.camps = [];
+            if(!window.appData.goals) window.appData.goals = [];
         }
 
         get(dbRef).then((snapshot) => {
@@ -362,7 +367,6 @@
                 let data = snapshot.val();
                 window.appData.targetHours = data.targetHours || 6;
                 window.appData.goals = data.goals || [];
-                window.appData.todos = data.todos || {};
                 window.appData.agenda = data.agenda || {};
                 window.appData.sessions = data.sessions || {};
                 window.appData.camps = data.camps || [];
@@ -415,7 +419,7 @@
             for (let dateKey in window.appData.sessions) window.appData.sessions[dateKey].forEach(s => { totalAllTimeMs += s.durationMs; });
             document.getElementById('stat-total-time').innerText = window.formatTimeSpanShort(totalAllTimeMs);
 
-            window.renderTodos(); window.renderGoals(); window.renderAgenda(); window.renderChart();
+            window.renderGoals(); window.renderAgenda(); window.renderChart();
             window.renderSubjectStats(); window.renderCamp();
         }
 
@@ -690,15 +694,6 @@
             const list = document.getElementById('goals-list'); let html = '';
             window.appData.goals.forEach(g => { html += `<div class="list-row ${g.done ? 'completed' : ''}"><input type="checkbox" ${g.done?'checked':''} onchange="window.toggleGoal(${g.id})"><span class="item-text">${g.text}</span><button class="btn-delete" onclick="window.deleteGoal(${g.id})">×</button></div>`; });
             list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Hedef yok.</div>';
-        }
-
-        window.addTodo = function() { const i = document.getElementById('todo-input'); if(i.value.trim()) { window.appData.todos[window.currentViewDate].push({ id: Date.now(), text: i.value, done: false }); i.value = ''; window.saveData(); window.renderTodos(); } }
-        window.toggleTodo = function(id) { let t = window.appData.todos[window.currentViewDate].find(x => x.id === id); if(t) { t.done = !t.done; window.saveData(); window.renderTodos(); } }
-        window.deleteTodo = function(id) { window.appData.todos[window.currentViewDate] = window.appData.todos[window.currentViewDate].filter(x => x.id !== id); window.saveData(); window.renderTodos(); }
-        window.renderTodos = function() {
-            const list = document.getElementById('todo-list'); let html = '';
-            window.appData.todos[window.currentViewDate].forEach(t => { html += `<div class="list-row ${t.done ? 'completed' : ''}"><input type="checkbox" ${t.done?'checked':''} onchange="window.toggleTodo(${t.id})"><span class="item-text">${t.text}</span><button class="btn-delete" onclick="window.deleteTodo(${t.id})">×</button></div>`; });
-            list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Görev yok.</div>';
         }
 
         window.openAgendaModal = function() { document.getElementById('agenda-time').value = ''; document.getElementById('agenda-title').value = ''; document.getElementById('agenda-modal').classList.add('active'); }
