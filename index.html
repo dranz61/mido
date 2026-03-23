@@ -133,6 +133,8 @@
         .modal.active { opacity: 1; visibility: visible; }
         .modal-content { background: #111; padding: 32px; border-radius: var(--radius-card); width: 400px; max-width: 90%; border: 1px solid var(--border); transform: scale(0.96); transition: var(--transition); }
         .modal.active .modal-content { transform: scale(1); }
+        .toast { position: fixed; top: 20px; right: 20px; background: var(--accent); color: var(--accent-text); padding: 12px 24px; border-radius: var(--radius-sm); font-weight: 700; z-index: 9999; opacity: 0; transform: translateY(-20px); transition: var(--transition); }
+        .toast.show { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 1024px) { .grid-container { grid-template-columns: 1fr 1fr; margin-top: 32px; } .col-center { grid-column: span 2; } }
         @media (max-width: 768px) { 
@@ -170,6 +172,11 @@
             </div>
             <div class="header-right">
                 <a href="https://kunduz.com/u/student/counseling/" target="_blank" class="btn-black btn-kunduz">🦫 Kunduz</a>
+                
+                <button class="btn-settings" onclick="window.openScheduleModal()" title="Ders Programı">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg>
+                </button>
+
                 <button class="btn-settings" onclick="window.openSettings()" title="Ayarlar">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                 </button>
@@ -225,6 +232,15 @@
         </div>
     </div>
 
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content" style="width: 90%; max-width: 800px; padding: 24px;">
+            <div class="card-title">Ders Programı <button class="btn-icon" onclick="window.closeScheduleModal()">✕</button></div>
+            <div style="width: 100%; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border);">
+                <img src="dersprogram.png" alt="Ders Programı bulunamadı. Lütfen dersprogram.png dosyasını klasöre ekleyin." style="width: 100%; height: auto; display: block; color: var(--text-sec); text-align: center; padding: 20px;">
+            </div>
+        </div>
+    </div>
+
     <div id="agenda-modal" class="modal">
         <div class="modal-content" style="width: 340px;">
             <div class="card-title">Etkinlik Ekle <button class="btn-icon" onclick="window.closeAgendaModal()">✕</button></div>
@@ -237,10 +253,25 @@
     <div id="settings-modal" class="modal">
         <div class="modal-content">
             <div class="card-title">Ayarlar <button class="btn-icon" onclick="window.closeSettings()">✕</button></div>
-            <div style="margin-bottom: 20px;"><label style="font-size:0.9rem; font-weight:500; color:var(--text-sec);">Günlük Hedef (Saat):</label><input type="number" id="set-target" style="margin-top:8px;"></div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="font-size:0.9rem; font-weight:500; color:var(--text-sec);">Günlük Hedef (Saat):</label>
+                <input type="number" id="set-target" style="margin-top:8px;">
+            </div>
+
+            <div style="margin-bottom: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <label style="font-size:0.9rem; font-weight:500; color:var(--text-sec);">Unutulan Süreyi Ekle (Dakika):</label>
+                <div style="display:flex; gap:12px; margin-top:8px;">
+                    <input type="number" id="manual-time-m" placeholder="Örn: 50" style="flex:1; margin:0;">
+                    <button class="btn-black" style="padding: 10px 20px;" onclick="window.addManualTime()">Ekle</button>
+                </div>
+            </div>
+
             <button class="btn-black" style="width: 100%; margin-bottom: 12px;" onclick="window.saveSettings()">Değişiklikleri Kaydet</button>
         </div>
     </div>
+
+    <div id="toast" class="toast">İşlem başarılı!</div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -259,7 +290,6 @@
         const db = getDatabase(app);
         const dbRef = ref(db, 'users/mirza_data');
 
-        // YENİ: Apple sistemlerinde asla patlamayan mutlak tarih fonksiyonu
         window.getLocalYMD = function(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
         const realTodayStr = window.getLocalYMD(new Date());
         window.currentViewDate = realTodayStr; 
@@ -273,16 +303,25 @@
             if(!window.appData.sessions[dateStr]) window.appData.sessions[dateStr] = [];
         }
 
+        // FİX: Veritabanı Çökme Koruması
         get(dbRef).then((snapshot) => {
-            if (snapshot.exists()) { window.appData = snapshot.val(); }
-            if(!window.appData.targetHours) window.appData.targetHours = 6;
+            if (snapshot.exists()) { 
+                let data = snapshot.val();
+                window.appData.targetHours = data.targetHours || 6;
+                window.appData.goals = data.goals || [];
+                window.appData.todos = data.todos || {};
+                window.appData.agenda = data.agenda || {};
+                window.appData.sessions = data.sessions || {};
+                window.appData.stats = data.stats || { streak: 0, lastStudyDate: null, totalPomo: 0 };
+            }
             initDateData(realTodayStr); document.getElementById('history-date-picker').value = realTodayStr;
             window.updateDashboard();
-        }).catch((error) => { initDateData(realTodayStr); window.updateDashboard(); });
+        }).catch((error) => { 
+            initDateData(realTodayStr); window.updateDashboard(); 
+        });
 
         window.saveData = function() { set(dbRef, window.appData); }
         
-        // YENİ: Tarihte geri gitmeyi sorunsuz hale getirdik.
         window.changeViewDate = function(newDate) { 
             if(!newDate) return; 
             window.currentViewDate = newDate; 
@@ -300,8 +339,13 @@
             return `${h}s ${m}dk`;
         }
 
+        window.showToast = function(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg; toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
         window.updateDashboard = function() {
-            // Güvenli Tarih Çevirisi (T12:00:00 hatayı önler)
             const dateObj = new Date(window.currentViewDate + "T12:00:00");
             let dateText = ""; 
             try { dateText = dateObj.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); } catch(e) { dateText = window.currentViewDate; }
@@ -331,18 +375,16 @@
             let svgHTML = `<svg class="weekly-chart" viewBox="0 0 300 120">`;
             let maxMs = window.appData.targetHours * 3600000; let daysData = [], totalWeekMs = 0;
             
-            // YENİ: Asla bozulmayan donanım bağımsız gün isimleri
+            // FİX: Gün İsimleri
             const trDays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 
             for(let i=6; i>=0; i--) {
-                // Seçilen tarihten 7 gün geriye sayıyoruz
                 let d = new Date(window.currentViewDate + "T12:00:00"); 
                 d.setDate(d.getDate() - i); 
                 let dStr = window.getLocalYMD(d);
                 let ms = (window.appData.sessions[dStr] || []).reduce((a,b)=>a+b.durationMs, 0);
                 
                 let dayLabel = trDays[d.getDay()];
-                
                 daysData.push({ label: dayLabel, ms: ms, isToday: i===0 });
                 if(ms > maxMs) maxMs = ms; totalWeekMs += ms;
             }
@@ -386,6 +428,30 @@
             list.innerHTML = html || '<div style="color:var(--text-sec); font-size:0.9rem; text-align:center;">Plan yok.</div>';
         }
 
+        // YENİ MODALLAR
+        window.openScheduleModal = function() { document.getElementById('schedule-modal').classList.add('active'); }
+        window.closeScheduleModal = function() { document.getElementById('schedule-modal').classList.remove('active'); }
+
+        window.openSettings = function() { document.getElementById('set-target').value = window.appData.targetHours; document.getElementById('settings-modal').classList.add('active'); }
+        window.closeSettings = function() { document.getElementById('settings-modal').classList.remove('active'); }
+        window.saveSettings = function() { window.appData.targetHours = parseFloat(document.getElementById('set-target').value) || 6; window.saveData(); window.updateDashboard(); window.closeSettings(); }
+
+        // YENİ: MANUEL SÜRE EKLEME (Geçmiş tarihlere de eklenebilir)
+        window.addManualTime = function() {
+            let mins = parseInt(document.getElementById('manual-time-m').value);
+            if(mins && mins > 0) {
+                if(!window.appData.sessions[window.currentViewDate]) window.appData.sessions[window.currentViewDate] = [];
+                window.appData.sessions[window.currentViewDate].push({
+                    id: Date.now(), type: 'Manuel Eklendi', durationMs: mins * 60000, 
+                    time: new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})
+                });
+                window.saveData();
+                window.updateDashboard();
+                document.getElementById('manual-time-m').value = '';
+                window.showToast(`${mins} dakika başarıyla eklendi!`);
+            }
+        }
+
         setInterval(() => {
             const now = new Date(); const h = pad(now.getHours()), m = pad(now.getMinutes()), s = pad(now.getSeconds());
             document.getElementById('header-clock').innerText = `${h}:${m}:${s}`;
@@ -397,9 +463,6 @@
             }
         }, 1000);
 
-        window.openSettings = function() { document.getElementById('set-target').value = window.appData.targetHours; document.getElementById('settings-modal').classList.add('active'); }
-        window.closeSettings = function() { document.getElementById('settings-modal').classList.remove('active'); }
-        window.saveSettings = function() { window.appData.targetHours = parseFloat(document.getElementById('set-target').value) || 6; window.saveData(); window.updateDashboard(); window.closeSettings(); }
     </script>
 </body>
 </html>
